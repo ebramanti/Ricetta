@@ -1,4 +1,4 @@
-Recipe
+Ricetta
 ======
 
-Recipe is your own personal collection of delicious meals.
+Ricetta is an application which allows for personal recipe management in a global community of fellow cooks.
