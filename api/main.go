@@ -1,10 +1,9 @@
 package main
 
 import (
-	//routes "./routes"
-	a "./api"
-	"./routes"
 	"fmt"
+	a "github.com/jadengore/Ricetta/api/api"
+	"github.com/jadengore/Ricetta/api/routes"
 	"github.com/jadengore/goconfig"
 	"log"
 	"net/http"

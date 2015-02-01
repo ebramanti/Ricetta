@@ -1,7 +1,7 @@
 package api
 
 import (
-	"../types"
+	"github.com/jadengore/Ricetta/api/types"
 	//"github.com/ant0ine/go-json-rest/rest"
 )
 

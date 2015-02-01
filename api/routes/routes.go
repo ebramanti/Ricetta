@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"../types"
 	"github.com/ant0ine/go-json-rest/rest"
+	"github.com/jadengore/Ricetta/api/types"
 )
 
 func MakeHandler(api types.Api, disableLogs bool) (rest.ResourceHandler, error) {
