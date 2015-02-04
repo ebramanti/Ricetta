@@ -1,7 +1,7 @@
 package types
 
 import (
-	"types"
+	"time"
 )
 
 //

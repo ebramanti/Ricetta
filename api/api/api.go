@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/jadengore/Ricetta/api/service"
 	"github.com/jadengore/Ricetta/api/types"
 	//"github.com/ant0ine/go-json-rest/rest"
 )
@@ -10,8 +11,8 @@ import (
  */
 func NewApi(uri string) *types.Api {
 	api := &types.Api{
-	//Svc:       service.NewService(uri),
-	//Validator: types.NewValidator(),
+		Svc:       service.NewService(uri),
+		Validator: types.NewValidator(),
 	}
 	return api
 }
