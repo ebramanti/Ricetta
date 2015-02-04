@@ -5,15 +5,17 @@ package types
 //
 
 type Recipe struct {
-	Title        string
-	Introduction string
-	Ingredients  []Ingredient
+	Title       string
+	Notes       string
+	Ingredients []Ingredient
 	// Time is represented in minutes
 	CookTime     int
 	CookTimeUnit string
 	PrepTime     int
 	PrepTimeUnit string
 	Steps        []Step
+	Tags         []Tag
+	Public       bool
 }
 
 //
@@ -30,4 +32,12 @@ type Step struct {
 	Instruction string
 	Time        int
 	TimeUnit    string
+}
+
+//
+// Recipe Tag Types
+//
+
+type Tag struct {
+	Name string
 }
