@@ -7,13 +7,12 @@ import (
 	"github.com/jadengore/goconfig"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
 	config, _ := goconfig.ReadConfigFile("../api-config.cfg")
 	port, _ := config.GetString("default", "server-port")
-	uri, _ := config.GetString(os.Args[1], "db-url")
+	uri, _ := config.GetString("local", "db-url")
 
 	api := a.NewApi(uri)
 	handler, err := routes.MakeHandler(*api, false)
