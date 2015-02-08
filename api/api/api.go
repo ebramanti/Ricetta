@@ -6,6 +6,12 @@ import (
 	//"github.com/ant0ine/go-json-rest/rest"
 )
 
+type Api struct {
+	Svc       *service.Svc
+	Util      *util.Util
+	Validator *validate.V
+}
+
 /**
  * Constructor
  */
