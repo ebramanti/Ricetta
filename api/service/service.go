@@ -14,3 +14,7 @@ func NewService(uri string) *Svc {
 	}
 	return s
 }
+
+func (s Svc) CreateNewUser(handle, email, passwordHash string) bool {
+	return s.Query.CreateUser(handle, email, passwordHash)
+}

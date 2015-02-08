@@ -8,7 +8,7 @@ import (
 // New User Type
 //
 
-type UserSignup struct {
+type UserSignupProposal struct {
 	Handle          string
 	Email           string
 	Password        string
