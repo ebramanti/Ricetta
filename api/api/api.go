@@ -5,7 +5,6 @@ import (
 	"github.com/jadengore/Ricetta/api/service"
 	"github.com/jadengore/Ricetta/api/types"
 	"github.com/jadengore/Ricetta/api/util"
-	"github.com/mccoyst/validate"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -13,7 +12,7 @@ import (
 type Api struct {
 	Svc       *service.Svc
 	Util      *util.Util
-	Validator *validate.V
+	Validator *types.RicettaValidator
 }
 
 /**
