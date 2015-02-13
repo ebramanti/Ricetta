@@ -14,7 +14,7 @@ func main() {
 	port, _ := config.GetString("default", "server-port")
 	uri, _ := config.GetString("local", "db-url")
 
-	api := a.NewApi(uri)
+	api := a.NewApi(uri, config)
 	handler, err := routes.MakeHandler(*api, false)
 	if err != nil {
 		log.Fatal(err)

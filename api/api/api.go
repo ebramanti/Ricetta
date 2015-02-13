@@ -5,6 +5,7 @@ import (
 	"github.com/jadengore/Ricetta/api/service"
 	"github.com/jadengore/Ricetta/api/types"
 	"github.com/jadengore/Ricetta/api/util"
+	"github.com/jadengore/goconfig"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
@@ -18,11 +19,11 @@ type Api struct {
 /**
  * Constructor
  */
-func NewApi(uri string) *Api {
+func NewApi(uri string, config *goconfig.ConfigFile) *Api {
 	api := &Api{
 		Svc:       service.NewService(uri),
 		Util:      &util.Util{},
-		Validator: types.NewValidator(),
+		Validator: types.NewValidator(config),
 	}
 	return api
 }
