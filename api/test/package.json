@@ -1,0 +1,10 @@
+{
+  "name": "ricetta",
+  "author": "Edward Bramanti",
+  "main": "main.js",
+  "version": "0.0.1",
+  "dependencies": {
+    "frisby": "latest",
+    "jasmine-node": "latest"
+  }
+}
