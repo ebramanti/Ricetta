@@ -5,6 +5,7 @@
   "version": "0.0.1",
   "dependencies": {
     "frisby": "latest",
-    "jasmine-node": "latest"
+    "jasmine-node": "latest",
+    "neo4j-js": "latest"
   }
 }
