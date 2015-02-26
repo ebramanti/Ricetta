@@ -1,9 +1,13 @@
 API_SERVER      = api
-API_TEST_DIR    = api/test
+API_TEST_DIR    = test
 DOCS_DIR        = api/docs
 
-.PHONY: api-server
+.PHONY: api
 api-server:
+	cd $(API_SERVER); go run main.go
+
+.PHONY: test-api
+test-api:
 	cd $(API_SERVER); go run main.go
 
 .PHONY: docs

@@ -6,6 +6,7 @@
   "dependencies": {
     "frisby": "latest",
     "jasmine-node": "latest",
-    "neo4j-js": "latest"
+    "neo4j-js": "latest",
+    "iniparser": "latest"
   }
 }
