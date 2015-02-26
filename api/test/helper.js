@@ -1,13 +1,15 @@
+var neo4j = require('neo4j-js');
+
 var helper = {
     constants: {
         host: 'http://localhost:8228/v1'
     },
-    test: function(spec) {
+    test: function(spec, cleanup) {
         for (var key in spec) {
             if (spec.hasOwnProperty(key)) {
                 var module = spec[key];
                 describe(module.description, function() {
-                    //afterEach(this.cleanup)
+                    afterEach(cleanup);
                     for (var test in module) {
                         if (module.hasOwnProperty(test) && test !== 'description') {
                             var currentTest = module[test]
@@ -43,6 +45,6 @@ var helper = {
             }
         });
     }
-}
+};
 
 module.exports = helper;

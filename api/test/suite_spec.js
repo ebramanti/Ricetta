@@ -1,10 +1,15 @@
 var util  = require('util'),
-    neo4j = require('neo4j-js'),
     frisby = require('frisby');
 
 var helper   = require('./helper');
+var cleanup  = helper.cleanup;
 var accounts = require('./accounts');
 
 describe('Ricetta API test suite', function() {
-    helper.test(accounts);
+    describe('Ricetta Test Modules', function() {
+        helper.test(accounts, cleanup);
+    });
+    // it('tears down the tests', function() {
+    //     cleanup();
+    // });
 });
