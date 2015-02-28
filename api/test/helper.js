@@ -3,7 +3,9 @@ var db = new neo4j.GraphDatabase('http://localhost:7474');
 
 var helper = {
     constants: {
-        host: 'http://localhost:8228/v1'
+        host: 'http://localhost:8228/v1',
+        // Routes
+        signupRoute: '/signup'
     },
     cleanup: function() {
         var query = [
