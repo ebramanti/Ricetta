@@ -11,9 +11,9 @@ import (
 )
 
 type Api struct {
-	Svc       *service.Svc
-	Util      *util.Util
-	Validator *types.RicettaValidator
+	Svc  *service.Svc
+	Util *util.Util
+	Vd   *types.RicettaValidator
 }
 
 /**
@@ -21,9 +21,9 @@ type Api struct {
  */
 func NewApi(uri string, config *goconfig.ConfigFile) *Api {
 	api := &Api{
-		Svc:       service.NewService(uri),
-		Util:      &util.Util{},
-		Validator: types.NewValidator(config),
+		Svc:  service.NewService(uri),
+		Util: &util.Util{},
+		Vd:   types.NewValidator(config),
 	}
 	return api
 }
@@ -39,9 +39,10 @@ func (a Api) Signup(w rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 
-	// if err := a.Validator.ValidateAndTag(proposal, "json"); err != nil {
-	// 	// Return error in specific field
-	// }
+	if err := a.Vd.Validator.ValidateAndTag(proposal, "json"); err != nil {
+		a.Util.SimpleJsonValidationReason(w, 400, err)
+		return
+	}
 
 	handle := proposal.Handle
 	email := proposal.Email

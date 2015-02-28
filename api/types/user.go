@@ -9,10 +9,10 @@ import (
 //
 
 type UserSignupProposal struct {
-	Handle          string
-	Email           string
-	Password        string
-	ConfirmPassword string
+	Handle          string `json:"handle" validate:"handle"`
+	Email           string `json:"email" validate:"email"`
+	Password        string `json:"password" validate:"password"`
+	ConfirmPassword string `json:"confirmpassword" validate:"password"`
 }
 
 type InitialUserAttributes struct {
