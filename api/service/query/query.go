@@ -38,7 +38,20 @@ func Now() time.Time {
 
 // Initializes the Neo4j Database
 func (q Query) DatabaseInit() {
-	fmt.Println("Initialize database here")
+	if curator := q.CreatePublicCurator(); curator == nil {
+		fmt.Println("Curator Node not initialized")
+	}
+}
+
+func (q Query) CreatePublicCurator() *neoism.Node {
+	if curator, _, err := q.Db.GetOrCreateNode("PublicCurator", "name", neoism.Props{
+		"name": "PublicCurator",
+	}); err != nil {
+		panic(err)
+	} else {
+		panicIfErr(curator.AddLabel("PublicCurator"))
+		return curator
+	}
 }
 
 func (q Query) CreateUser(handle, email, passwordHash string) bool {
