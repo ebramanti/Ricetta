@@ -1,10 +1,12 @@
 var frisby = require('frisby'),
     constants  = require('../helper').constants,
+    cleanupAndInit = require('../helper').cleanupAndInit;
     cleanup = require('../helper').cleanup;
 
 var signup = function() {
     describe('Signup Tests', function() {
-        afterEach(cleanup);
+        afterAll(cleanup);
+        afterEach(cleanupAndInit);
 
         frisby.create('tests a missing handle').post(constants.host + constants.signupRoute, {
             handle: "",
