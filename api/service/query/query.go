@@ -54,6 +54,50 @@ func (q Query) CreatePublicCurator() *neoism.Node {
 	}
 }
 
+func (q Query) HandleUnique(handle string) bool {
+	return !q.UserExistsByHandle(handle)
+}
+
+func (q Query) EmailUnique(email string) bool {
+	return !q.UserExistsByEmail(email)
+}
+
+func (q Query) UserExistsByHandle(handle string) bool {
+	found := []struct {
+		Handle string `json:"u.handle"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+            MATCH   (u:User)
+            WHERE   u.handle = {handle}
+            RETURN  u.handle
+        `,
+		Parameters: neoism.Props{
+			"handle": handle,
+		},
+		Result: &found,
+	})
+	return len(found) > 0
+}
+
+func (q Query) UserExistsByEmail(email string) bool {
+	found := []struct {
+		Email string `json:"u.email"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+            MATCH   (u:User)
+            WHERE   u.email = {email}
+            RETURN  u.email
+        `,
+		Parameters: neoism.Props{
+			"email": email,
+		},
+		Result: &found,
+	})
+	return len(found) > 0
+}
+
 func (q Query) CreateUser(handle, email, passwordHash string) bool {
 	newUser := []struct {
 		Handle string    `json:"u.handle"`

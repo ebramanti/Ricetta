@@ -54,19 +54,17 @@ func (a Api) Signup(w rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 
-	// TODO: Implement unique handle/email
+	//Ensure unique handle
+	if unique := a.Svc.HandleIsUnique(handle); !unique {
+		a.Util.SimpleJsonReason(w, 409, "Sorry, handle or email is already taken")
+		return
+	}
 
-	// Ensure unique handle
-	// if unique := a.Svc.HandleIsUnique(handle); !unique {
-	// 	a.Util.SimpleJsonReason(w, 409, "Sorry, handle or email is already taken")
-	// 	return
-	// }
-
-	// // Ensure unique email
-	// if unique := a.Svc.EmailIsUnique(email); !unique {
-	// 	a.Util.SimpleJsonReason(w, 409, "Sorry, handle or email is already taken")
-	// 	return
-	// }
+	// Ensure unique email
+	if unique := a.Svc.EmailIsUnique(email); !unique {
+		a.Util.SimpleJsonReason(w, 409, "Sorry, handle or email is already taken")
+		return
+	}
 
 	var hashed_pass string
 

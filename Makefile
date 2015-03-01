@@ -7,8 +7,8 @@ api-server:
 	cd $(API_SERVER); go run main.go
 
 .PHONY: test-api
-test-api:
-	cd $(API_SERVER); go run main.go
+api-test:
+	jasmine-node api/test --verbose
 
 .PHONY: docs
 docs:

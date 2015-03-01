@@ -18,3 +18,11 @@ func NewService(uri string) *Svc {
 func (s Svc) CreateNewUser(handle, email, passwordHash string) bool {
 	return s.Query.CreateUser(handle, email, passwordHash)
 }
+
+func (s Svc) HandleIsUnique(handle string) bool {
+	return s.Query.HandleUnique(handle)
+}
+
+func (s Svc) EmailIsUnique(email string) bool {
+	return s.Query.EmailUnique(email)
+}
