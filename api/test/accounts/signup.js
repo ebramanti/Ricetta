@@ -57,15 +57,6 @@ var signup = function() {
             reason: ["field password is invalid: Too short, minimum length is 8"]
         }).expectStatus(400).toss();
 
-        frisby.create('tests password too long').post(constants.host + constants.signupRoute, {
-            handle: "socash",
-            email: "socash@ricetta.io",
-            password: "123456789012345678901234567890123456789012345678901",
-            confirmpassword: "123456789012345678901234567890123456789012345678901"
-        }, {json: true}).expectJSON({
-            reason: ["field password is invalid: Too long, maximum length is 50"]
-        }).expectStatus(400).toss();
-
         frisby.create('tests mismatch of password and confirmation').post(constants.host + constants.signupRoute, {
             handle: "socash",
             email: "socash@ricetta.io",
@@ -95,25 +86,34 @@ var signup = function() {
             }).expectStatus(409).toss();
         }).expectStatus(201).toss();
 
-        // frisby.create('fails if email already exists').post(constants.host + constants.signupRoute, {
-        //     handle: "socash",
-        //     email: "socash@ricetta.io",
-        //     password: "12345678",
-        //     confirmpassword: "12345678"
-        // }, {json: true}).expectJSON({
-        //     email: "socash@ricetta.io",
-        //     handle: "socash",
-        //     response: "Signed up a new user!"
-        // }).after(function() {
-        //     frisby.create('fails on second user').post(constants.host + constants.signupRoute, {
-        //         handle: "socash2",
-        //         email: "socash@ricetta.io",
-        //         password: "123456789",
-        //         confirmpassword: "123456789"
-        //     }, {json: true}).expectJSON({
-        //         reason: "Sorry, handle or email is already taken"
-        //     }).expectStatus(409).toss();
-        // }).expectStatus(201).toss();
+        frisby.create('tests password too long').post(constants.host + constants.signupRoute, {
+            handle: "socash",
+            email: "socash@ricetta.io",
+            password: "123456789012345678901234567890123456789012345678901",
+            confirmpassword: "123456789012345678901234567890123456789012345678901"
+        }, {json: true}).expectJSON({
+            reason: ["field password is invalid: Too long, maximum length is 50"]
+        }).expectStatus(400).toss();
+
+        frisby.create('fails if email already exists').post(constants.host + constants.signupRoute, {
+            handle: "socash",
+            email: "socash@ricetta.io",
+            password: "12345678",
+            confirmpassword: "12345678"
+        }, {json: true}).expectJSON({
+            email: "socash@ricetta.io",
+            handle: "socash",
+            response: "Signed up a new user!"
+        }).after(function() {
+            frisby.create('fails on second user').post(constants.host + constants.signupRoute, {
+                handle: "socash2",
+                email: "socash@ricetta.io",
+                password: "123456789",
+                confirmpassword: "123456789"
+            }, {json: true}).expectJSON({
+                reason: "Sorry, handle or email is already taken"
+            }).expectStatus(409).toss();
+        }).expectStatus(201).toss();
 
         // frisby.create('tests a good signup').post(constants.host + constants.signupRoute, {
         //     handle: "socash",
