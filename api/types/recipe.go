@@ -5,18 +5,16 @@ package types
 //
 
 type Recipe struct {
-	Title        string
-	Notes        string
-	Ingredients  []Ingredient
-	CookTime     int
-	CookTimeUnit string
-	PrepTime     int
-	PrepTimeUnit string
-	Steps        []Step
-	Tags         []Tag
-	Public       bool
+	Title        string       `json:"title" validate:"recipetitle"`
+	Notes        string       `json:"notes" validate:"recipenotes"`
+	Ingredients  []Ingredient `json:"ingredients"`
+	CookTime     int          `json:"cooktime" validate:"time"`
 	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
+	PrepTime     int          `json:"preptime" validate:"time"`
 	PrepTimeUnit string       `json:"prepunit" validate:"timeunit"`
+	Steps        []Step       `json:"steps"`
+	Tags         []Tag        `json:"tags"`
+	Public       bool         `json:"public"`
 }
 
 //
@@ -24,9 +22,10 @@ type Recipe struct {
 //
 
 type Ingredient struct {
-	Name   string
-	Amount string
-	URL    string
+	Name       string
+	Amount     int
+	AmountUnit string
+	URL        string
 }
 
 type Step struct {
