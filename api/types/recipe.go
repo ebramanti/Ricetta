@@ -15,6 +15,8 @@ type Recipe struct {
 	Steps        []Step
 	Tags         []Tag
 	Public       bool
+	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
+	PrepTimeUnit string       `json:"prepunit" validate:"timeunit"`
 }
 
 //
@@ -39,4 +41,15 @@ type Step struct {
 
 type Tag struct {
 	Name string
+}
+
+func (v RicettaValidator) validateTimeUnit(i interface{}) error {
+	timeUnit := i.(string)
+	if timeUnit == "" {
+		return fmt.Errorf("Required field")
+	} else if !v.Constants.TIME_UNIT_REGEX.MatchString() {
+		return fmt.Errorf(handle + " is not a valid unit of time (secs-weeks)")
+	} else {
+		return nil
+	}
 }
