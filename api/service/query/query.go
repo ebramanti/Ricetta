@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"github.com/dchest/uniuri"
 	"github.com/jmcvetta/neoism"
 	"time"
 )
@@ -35,6 +36,15 @@ func (q Query) cypherOrPanic(query *neoism.CypherQuery) {
 func Now() time.Time {
 	return time.Now().Local()
 }
+
+func NewUUID() string {
+	return uniuri.NewLen(uniuri.UUIDLen)
+}
+
+// Constants //
+const (
+	AUTH_TOKEN_DURATION = time.Hour
+)
 
 // Initializes the Neo4j Database
 func (q Query) DatabaseInit() {
@@ -146,5 +156,40 @@ func (q Query) GetHashedPassword(handle string) (hashedPassword []byte, ok bool)
 		return []byte{}, ok
 	} else {
 		return []byte(found[0].HashedPassword), ok
+	}
+}
+
+func (q Query) SetGetNewAuthTokenForUser(handle string) (string, bool) {
+	created := []struct {
+		Token string `json:"a.value"`
+	}{}
+	now := Now()
+	token := "Token " + NewUUID()
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+                MATCH   (u:User)
+                WHERE   u.handle     = {handle}
+                WITH    u
+                OPTIONAL MATCH (u)<-[old_r:SESSION_OF]-(old_a:AuthToken)
+                DELETE  old_r, old_a
+                WITH    u
+                CREATE  (u)<-[r:SESSION_OF]-(a:AuthToken)
+                SET     r.created_at = {now}
+                SET     a.value      = {token}
+                SET     a.expires    = {time}
+                RETURN  a.value
+            `,
+		Parameters: neoism.Props{
+			"handle": handle,
+			"token":  token,
+			"time":   now.Add(AUTH_TOKEN_DURATION),
+			"now":    now,
+		},
+		Result: &created,
+	})
+	if ok := len(created) > 0; ok {
+		return created[0].Token, ok
+	} else {
+		return "", ok
 	}
 }
