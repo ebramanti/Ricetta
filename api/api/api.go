@@ -95,7 +95,7 @@ func (a Api) Login(w rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 
-	if err := a.Validator.ValidateAndTag(credentials, "json"); err != nil {
+	if err := a.Vd.Validator.ValidateAndTag(credentials, "json"); err != nil {
 		a.Util.SimpleJsonValidationReason(w, 400, err)
 		return
 	}

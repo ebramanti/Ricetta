@@ -13,8 +13,9 @@ type vc struct {
 	MAX_PASS_LENGTH   int
 
 	// Regex Constants
-	HANDLE_REGEX *regexp.Regexp
-	EMAIL_REGEX  *regexp.Regexp
+	HANDLE_REGEX    *regexp.Regexp
+	EMAIL_REGEX     *regexp.Regexp
+	TIME_UNIT_REGEX *regexp.Regexp
 }
 
 // Main Ricetta Validator

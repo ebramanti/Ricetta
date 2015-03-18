@@ -1,5 +1,9 @@
 package types
 
+import (
+	"fmt"
+)
+
 //
 // Recipe Creation Types
 //
@@ -46,8 +50,8 @@ func (v RicettaValidator) validateTimeUnit(i interface{}) error {
 	timeUnit := i.(string)
 	if timeUnit == "" {
 		return fmt.Errorf("Required field")
-	} else if !v.Constants.TIME_UNIT_REGEX.MatchString() {
-		return fmt.Errorf(handle + " is not a valid unit of time (secs-weeks)")
+	} else if !v.Constants.TIME_UNIT_REGEX.MatchString(timeUnit) {
+		return fmt.Errorf(timeUnit + " is not a valid unit of time (secs-weeks)")
 	} else {
 		return nil
 	}
