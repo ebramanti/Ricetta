@@ -125,3 +125,26 @@ func (q Query) CreateUser(handle, email, passwordHash string) bool {
 	})
 	return len(newUser) > 0
 }
+
+func (q Query) GetHashedPassword(handle string) (hashedPassword []byte, ok bool) {
+	found := []struct {
+		HashedPassword string `json:"u.password"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+            MATCH   (u:User)
+            WHERE   u.handle = {handle}
+            RETURN  u.password
+        `,
+		Parameters: neoism.Props{
+			"handle": handle,
+		},
+		Result: &found,
+	})
+
+	if ok := len(found) > 0; !ok {
+		return []byte{}, ok
+	} else {
+		return []byte(found[0].HashedPassword), ok
+	}
+}

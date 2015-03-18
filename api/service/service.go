@@ -26,3 +26,11 @@ func (s Svc) HandleIsUnique(handle string) bool {
 func (s Svc) EmailIsUnique(email string) bool {
 	return s.Query.EmailUnique(email)
 }
+
+func (s Svc) GetHashedPassword(handle string) (hashedPassword []byte, ok bool) {
+	return s.Query.GetHashedPassword(handle)
+}
+
+func (s Svc) SetGetNewAuthToken(handle string) (token string, ok bool) {
+	return s.Query.SetGetNewAuthTokenForUser(handle)
+}
