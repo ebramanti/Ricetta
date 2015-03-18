@@ -30,8 +30,8 @@ type InitialUserAttributes struct {
 //
 
 type UserLogin struct {
-	Handle   string
-	Password string
+	Handle   string `json:"handle" validate:"handle"`
+	Password string `json:"password" validate:"password"`
 }
 
 //
