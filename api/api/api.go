@@ -127,3 +127,13 @@ func (a Api) Login(w rest.ResponseWriter, r *rest.Request) {
 		}
 	}
 }
+
+func (a Api) Logout(w rest.ResponseWriter, r *rest.Request) {
+	if a.Svc.DestroyAuthToken(a.Util.GetTokenFromHeader(r)) {
+		w.WriteHeader(204)
+		return
+	} else {
+		a.Util.SimpleJsonReason(w, 403, "Cannot invalidate token because it is missing")
+		return
+	}
+}

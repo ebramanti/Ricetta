@@ -35,3 +35,7 @@ func (s Svc) GetHashedPassword(handle string) (hashedPassword []byte, ok bool) {
 func (s Svc) SetGetNewAuthToken(handle string) (token string, ok bool) {
 	return s.Query.SetGetNewAuthTokenForUser(handle)
 }
+
+func (s Svc) DestroyAuthToken(token string) bool {
+	return s.Query.DestroyAuthToken(token)
+}

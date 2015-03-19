@@ -207,3 +207,22 @@ func (q Query) SetGetNewAuthTokenForUser(handle string) (string, bool) {
 		return "", ok
 	}
 }
+
+func (q Query) DestroyAuthToken(token string) bool {
+	deleted := []struct {
+		Handle string `json:"u.handle"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+            MATCH   (u:User)<-[so:SESSION_OF]-(a:AuthToken)
+            WHERE   a.value = {token}
+            DELETE  so, a
+            RETURN  u.handle
+        `,
+		Parameters: neoism.Props{
+			"token": token,
+		},
+		Result: &deleted,
+	})
+	return len(deleted) > 0
+}
