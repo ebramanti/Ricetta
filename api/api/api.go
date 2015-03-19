@@ -21,7 +21,7 @@ type Api struct {
  */
 func NewApi(uri string, config *goconfig.ConfigFile) *Api {
 	api := &Api{
-		Svc:  service.NewService(uri),
+		Svc:  service.NewService(uri, config),
 		Util: &util.Util{},
 		Vd:   types.NewValidator(config),
 	}

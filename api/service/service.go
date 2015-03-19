@@ -2,15 +2,16 @@ package service
 
 import (
 	"github.com/jadengore/Ricetta/api/service/query"
+	"github.com/jadengore/goconfig"
 )
 
 type Svc struct {
 	Query *query.Query
 }
 
-func NewService(uri string) *Svc {
+func NewService(uri string, config *goconfig.ConfigFile) *Svc {
 	s := &Svc{
-		query.NewQuery(uri),
+		query.NewQuery(uri, config),
 	}
 	return s
 }

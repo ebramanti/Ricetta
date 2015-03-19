@@ -8,9 +8,10 @@ import (
 
 type vc struct {
 	// Config Constants
-	MAX_HANDLE_LENGTH int
-	MIN_PASS_LENGTH   int
-	MAX_PASS_LENGTH   int
+	MAX_HANDLE_LENGTH  int
+	MIN_PASS_LENGTH    int
+	MAX_PASS_LENGTH    int
+	AUTH_TOKEN_EXPIRES int64
 
 	// Regex Constants
 	HANDLE_REGEX    *regexp.Regexp
@@ -44,6 +45,8 @@ func initializeConstants(config *goconfig.ConfigFile) vc {
 	c.MAX_HANDLE_LENGTH, _ = config.GetInt("global", "handle-length")
 	c.MIN_PASS_LENGTH, _ = config.GetInt("global", "min-pass")
 	c.MAX_PASS_LENGTH, _ = config.GetInt("global", "max-pass")
+	// Using int64 for query layer
+	c.AUTH_TOKEN_EXPIRES, _ = config.GetInt64("global", "auth-token-expires")
 
 	// Regular expression constants
 	c.HANDLE_REGEX = regexp.MustCompile(`^[\p{L}\p{M}][\d\p{L}\p{M}]*$`)

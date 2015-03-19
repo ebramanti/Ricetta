@@ -3,6 +3,8 @@ package query
 import (
 	"fmt"
 	"github.com/dchest/uniuri"
+	"github.com/jadengore/Ricetta/api/types"
+	"github.com/jadengore/goconfig"
 	"github.com/jmcvetta/neoism"
 	"time"
 )
@@ -11,15 +13,28 @@ import (
 
 type Query struct {
 	Db *neoism.Database
+	Vd *types.RicettaValidator
 }
 
-func NewQuery(uri string) *Query {
+const (
+	NANOSECONDS_IN_DAY int64 = 86400000000000
+)
+
+var (
+	expires time.Duration
+)
+
+func NewQuery(uri string, config *goconfig.ConfigFile) *Query {
 	neo4jdb, err := neoism.Connect(uri)
 	panicIfErr(err)
 
-	query := Query{neo4jdb}
-	query.DatabaseInit()
+	query := Query{
+		neo4jdb,
+		types.NewValidator(config),
+	}
 
+	query.DatabaseInit()
+	query.ConstantInit()
 	return &query
 }
 
@@ -41,16 +56,15 @@ func NewUUID() string {
 	return uniuri.NewLen(uniuri.UUIDLen)
 }
 
-// Constants //
-const (
-	AUTH_TOKEN_DURATION = time.Hour
-)
-
 // Initializes the Neo4j Database
 func (q Query) DatabaseInit() {
 	if curator := q.CreatePublicCurator(); curator == nil {
 		fmt.Println("Curator Node not initialized")
 	}
+}
+
+func (q Query) ConstantInit() {
+	expires = time.Duration(q.Vd.Constants.AUTH_TOKEN_EXPIRES * NANOSECONDS_IN_DAY)
 }
 
 func (q Query) CreatePublicCurator() *neoism.Node {
@@ -182,7 +196,7 @@ func (q Query) SetGetNewAuthTokenForUser(handle string) (string, bool) {
 		Parameters: neoism.Props{
 			"handle": handle,
 			"token":  token,
-			"time":   now.Add(AUTH_TOKEN_DURATION),
+			"time":   now.Add(expires),
 			"now":    now,
 		},
 		Result: &created,
