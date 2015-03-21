@@ -28,6 +28,14 @@ func NewApi(uri string, config *goconfig.ConfigFile) *Api {
 	return api
 }
 
+func (a Api) Authenticate(r *rest.Request) bool {
+	if token := a.Util.GetTokenFromHeader(r); token != "" {
+		return a.Svc.VerifyAuthToken(token)
+	} else {
+		return false
+	}
+}
+
 //
 // Begin API functions
 //
@@ -136,4 +144,8 @@ func (a Api) Logout(w rest.ResponseWriter, r *rest.Request) {
 		a.Util.SimpleJsonReason(w, 403, "Cannot invalidate token because it is missing")
 		return
 	}
+}
+
+func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
+
 }

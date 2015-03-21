@@ -63,6 +63,7 @@ func (q Query) DatabaseInit() {
 	}
 }
 
+// Initializes constants needed for query layer
 func (q Query) ConstantInit() {
 	expires = time.Duration(q.Vd.Constants.AUTH_TOKEN_EXPIRES * NANOSECONDS_IN_DAY)
 }
@@ -206,6 +207,26 @@ func (q Query) SetGetNewAuthTokenForUser(handle string) (string, bool) {
 	} else {
 		return "", ok
 	}
+}
+
+func (q Query) FindAuthToken(token string) bool {
+	found := []struct {
+		Handle string `json:"u.handle"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: `
+            MATCH   (u:User)<-[:SESSION_OF]-(a:AuthToken)
+            WHERE   a.value   = {token}
+            AND     a.expires > {now}
+            RETURN  u.handle
+        `,
+		Parameters: neoism.Props{
+			"token": token,
+			"now":   Now(),
+		},
+		Result: &found,
+	})
+	return len(found) == 1
 }
 
 func (q Query) DestroyAuthToken(token string) bool {

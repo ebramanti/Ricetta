@@ -39,3 +39,7 @@ func (s Svc) SetGetNewAuthToken(handle string) (token string, ok bool) {
 func (s Svc) DestroyAuthToken(token string) bool {
 	return s.Query.DestroyAuthToken(token)
 }
+
+func (s Svc) VerifyAuthToken(token string) bool {
+	return s.Query.FindAuthToken(token)
+}
