@@ -42,3 +42,11 @@ func decodeValidatorErrors(err []error) []string {
 	}
 	return errorMessage
 }
+
+func (u Util) FailedToAuthenticate(w rest.ResponseWriter) {
+	w.WriteHeader(401)
+	w.WriteJson(types.Json{
+		"response": "Failed to authenticate request",
+		"reason":   "Missing, illegal or expired token",
+	})
+}

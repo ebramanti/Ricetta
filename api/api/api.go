@@ -147,5 +147,17 @@ func (a Api) Logout(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
+	if !a.Authenticate(r) {
+		a.Util.FailedToAuthenticate(w)
+		return
+	}
+	payload := types.Recipe{}
 
+	if err := r.DecodeJsonPayload(&payload); err != nil {
+		rest.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(200)
+	w.WriteJson(payload)
+	return
 }
