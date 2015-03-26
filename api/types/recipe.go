@@ -26,16 +26,16 @@ type Recipe struct {
 //
 
 type Ingredient struct {
-	Name       string
-	Amount     int
-	AmountUnit string
-	URL        string
+	Name       string `json:"name"`
+	Amount     int    `json:"amount"`
+	AmountUnit string `json:"amountunit"`
+	URL        string `json:"url"`
 }
 
 type Step struct {
-	Instruction string
-	Time        int
-	TimeUnit    string
+	Instruction string `json:"instruction"`
+	Time        int    `json:"time"`
+	TimeUnit    string `json:"timeunit" validate:"timeunit"`
 }
 
 //
@@ -43,7 +43,7 @@ type Step struct {
 //
 
 type Tag struct {
-	Name string
+	Name string `json:"name"`
 }
 
 func (v RicettaValidator) validateTimeUnit(i interface{}) error {
