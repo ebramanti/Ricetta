@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"unicode/utf8"
 )
 
 //
@@ -15,7 +16,7 @@ type Recipe struct {
 	CookTime     int          `json:"cooktime" validate:"time"`
 	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
 	PrepTime     int          `json:"preptime" validate:"time"`
-	PrepTimeUnit string       `json:"prepunit" validate:"timeunit"`
+	PrepTimeUnit string       `json:"preptimeunit" validate:"timeunit"`
 	Steps        []Step       `json:"steps"`
 	Tags         []Tag        `json:"tags"`
 	Public       bool         `json:"public"`
@@ -51,7 +52,42 @@ func (v RicettaValidator) validateTimeUnit(i interface{}) error {
 	if timeUnit == "" {
 		return fmt.Errorf("Required field")
 	} else if !v.Constants.TIME_UNIT_REGEX.MatchString(timeUnit) {
-		return fmt.Errorf(timeUnit + " is not a valid unit of time (secs-weeks)")
+		return fmt.Errorf(timeUnit + " is not a valid unit of time - [sec(s), min(s), hr(s), day(s), week(s)]")
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateTime(i interface{}) error {
+	time, ok := i.(int)
+	if !ok {
+		return fmt.Errorf("Required field")
+	} else if time <= 0 {
+		return fmt.Errorf("Invalid time unit: %d", time)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateRecipeTitle(i interface{}) error {
+	title := i.(string)
+	titlelen := utf8.RuneCountInString(title)
+	if title == "" {
+		return fmt.Errorf("Required field")
+	} else if titlelen > v.Constants.MAX_RECIPE_TITLE_LENGTH {
+		return fmt.Errorf("max length is %d", v.Constants.MAX_RECIPE_TITLE_LENGTH)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateRecipeNotes(i interface{}) error {
+	notes := i.(string)
+	noteslen := utf8.RuneCountInString(notes)
+	if notes == "" {
+		return fmt.Errorf("Required field")
+	} else if noteslen > v.Constants.MAX_RECIPE_NOTES_LENGTH {
+		return fmt.Errorf("max length is %d", v.Constants.MAX_RECIPE_NOTES_LENGTH)
 	} else {
 		return nil
 	}

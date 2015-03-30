@@ -157,6 +157,11 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	if err := a.Vd.Validator.ValidateAndTag(payload, "json"); err != nil {
+		a.Util.SimpleJsonValidationReason(w, 400, err)
+		return
+	}
 	w.WriteHeader(200)
 	w.WriteJson(payload)
 	return

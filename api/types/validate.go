@@ -8,10 +8,12 @@ import (
 
 type vc struct {
 	// Config Constants
-	MAX_HANDLE_LENGTH  int
-	MIN_PASS_LENGTH    int
-	MAX_PASS_LENGTH    int
-	AUTH_TOKEN_EXPIRES int64
+	MAX_HANDLE_LENGTH       int
+	MIN_PASS_LENGTH         int
+	MAX_PASS_LENGTH         int
+	MAX_RECIPE_TITLE_LENGTH int
+	MAX_RECIPE_NOTES_LENGTH int
+	AUTH_TOKEN_EXPIRES      int64
 
 	// Regex Constants
 	HANDLE_REGEX    *regexp.Regexp
@@ -32,9 +34,13 @@ func NewValidator(config *goconfig.ConfigFile) *RicettaValidator {
 	vd := RicettaValidator{}
 	vd.Constants = initializeConstants(config)
 	vd.Validator = validate.V{
-		"handle":   vd.validateHandle,
-		"email":    vd.validateEmail,
-		"password": vd.validatePassword,
+		"handle":      vd.validateHandle,
+		"email":       vd.validateEmail,
+		"password":    vd.validatePassword,
+		"timeunit":    vd.validateTimeUnit,
+		"time":        vd.validateTime,
+		"recipetitle": vd.validateRecipeTitle,
+		"recipenotes": vd.validateRecipeNotes,
 	}
 	return &vd
 }
@@ -45,6 +51,9 @@ func initializeConstants(config *goconfig.ConfigFile) vc {
 	c.MAX_HANDLE_LENGTH, _ = config.GetInt("global", "handle-length")
 	c.MIN_PASS_LENGTH, _ = config.GetInt("global", "min-pass")
 	c.MAX_PASS_LENGTH, _ = config.GetInt("global", "max-pass")
+	c.MAX_RECIPE_TITLE_LENGTH, _ = config.GetInt("global", "max-recipe-title")
+	c.MAX_RECIPE_NOTES_LENGTH, _ = config.GetInt("global", "max-recipe-notes")
+
 	// Using int64 for query layer
 	c.AUTH_TOKEN_EXPIRES, _ = config.GetInt64("global", "auth-token-expires")
 
