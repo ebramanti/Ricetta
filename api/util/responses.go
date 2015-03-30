@@ -35,6 +35,16 @@ func (u Util) SimpleJsonValidationReason(w rest.ResponseWriter, code int, err []
 	})
 }
 
+func (u Util) SliceElementValidationReason(w rest.ResponseWriter, code int, err []error, sliceType string, index int) {
+	errorMessage := decodeValidatorErrors(err)
+	w.WriteHeader(code)
+	w.WriteJson(types.Json{
+		"type":   sliceType,
+		"index":  index,
+		"reason": errorMessage,
+	})
+}
+
 func decodeValidatorErrors(err []error) []string {
 	errorMessage := make([]string, len(err))
 	for i := range err {

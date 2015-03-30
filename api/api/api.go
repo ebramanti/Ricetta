@@ -36,6 +36,10 @@ func (a Api) Authenticate(r *rest.Request) bool {
 	}
 }
 
+func (a Api) Validate(data interface{}) []error {
+	return a.Vd.Validator.ValidateAndTag(data, "json")
+}
+
 //
 // Begin API functions
 //
@@ -162,6 +166,26 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 		a.Util.SimpleJsonValidationReason(w, 400, err)
 		return
 	}
+
+	if err := a.Validate(payload); err != nil {
+		a.Util.SimpleJsonValidationReason(w, 400, err)
+		return
+	}
+
+	for index, ingredient := range payload.Ingredients {
+		if err := a.Vd.Validator.ValidateAndTag(ingredient, "json"); err != nil {
+			a.Util.SliceElementValidationReason(w, 400, err, "ingredient", index)
+			return
+		}
+	}
+
+	for index, step := range payload.Steps {
+		if err := a.Vd.Validator.ValidateAndTag(step, "json"); err != nil {
+			a.Util.SliceElementValidationReason(w, 400, err, "step", index)
+			return
+		}
+	}
+
 	w.WriteHeader(200)
 	w.WriteJson(payload)
 	return

@@ -27,15 +27,15 @@ type Recipe struct {
 //
 
 type Ingredient struct {
-	Name       string `json:"name"`
+	Name       string `json:"name" validate:"ingredient"`
 	Amount     int    `json:"amount"`
 	AmountUnit string `json:"amountunit"`
-	URL        string `json:"url"`
+	URL        string `json:"url" validate:"url"`
 }
 
 type Step struct {
 	Instruction string `json:"instruction"`
-	Time        int    `json:"time"`
+	Time        int    `json:"time" validate:"time"`
 	TimeUnit    string `json:"timeunit" validate:"timeunit"`
 }
 
@@ -46,6 +46,10 @@ type Step struct {
 type Tag struct {
 	Name string `json:"name"`
 }
+
+//
+// Recipe Validator Functions
+//
 
 func (v RicettaValidator) validateTimeUnit(i interface{}) error {
 	timeUnit := i.(string)
@@ -62,7 +66,7 @@ func (v RicettaValidator) validateTime(i interface{}) error {
 	time, ok := i.(int)
 	if !ok {
 		return fmt.Errorf("Required field")
-	} else if time <= 0 {
+	} else if time <= 0 || time > 1000 {
 		return fmt.Errorf("Invalid time unit: %d", time)
 	} else {
 		return nil
@@ -88,6 +92,30 @@ func (v RicettaValidator) validateRecipeNotes(i interface{}) error {
 		return fmt.Errorf("Required field")
 	} else if noteslen > v.Constants.MAX_RECIPE_NOTES_LENGTH {
 		return fmt.Errorf("max length is %d", v.Constants.MAX_RECIPE_NOTES_LENGTH)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateIngredient(i interface{}) error {
+	ingredient := i.(string)
+	ingredientlen := utf8.RuneCountInString(ingredient)
+	if ingredient == "" {
+		return fmt.Errorf("Required field")
+	} else if ingredientlen > v.Constants.MAX_INGREDIENT_LENGTH {
+		return fmt.Errorf("max length is %d", v.Constants.MAX_INGREDIENT_LENGTH)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateURL(i interface{}) error {
+	url := i.(string)
+	if url == "" {
+		// This demonstrates how to validate an optional field
+		return nil
+	} else if !v.Constants.URL_REGEX.MatchString(url) {
+		return fmt.Errorf("Not a valid URL string: %s", url)
 	} else {
 		return nil
 	}
