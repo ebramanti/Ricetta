@@ -1,8 +1,10 @@
 package types
 
 import (
+	"fmt"
 	"github.com/jadengore/goconfig"
 	"github.com/mccoyst/validate"
+	"reflect"
 	"regexp"
 )
 
@@ -14,6 +16,7 @@ type vc struct {
 	MAX_RECIPE_TITLE_LENGTH int
 	MAX_RECIPE_NOTES_LENGTH int
 	MAX_INGREDIENT_LENGTH   int
+	MAX_TAG_LENGTH          int
 	AUTH_TOKEN_EXPIRES      int64
 
 	// Regex Constants
@@ -46,6 +49,9 @@ func NewValidator(config *goconfig.ConfigFile) *RicettaValidator {
 		"ingredient":  vd.validateIngredient,
 		"url":         vd.validateURL,
 		"tag":         vd.validateTag,
+
+		// Required field Validation
+		"existence": vd.validateExistence,
 	}
 	return &vd
 }
@@ -70,4 +76,12 @@ func initializeConstants(config *goconfig.ConfigFile) vc {
 	c.URL_REGEX = regexp.MustCompile(`(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)`)
 	c.TIME_UNIT_REGEX = regexp.MustCompile(`(hr|min|sec|day|week)s?$`)
 	return c
+}
+
+func (v RicettaValidator) validateExistence(i interface{}) error {
+	if reflect.ValueOf(i).IsNil() {
+		return fmt.Errorf("Required field omitted")
+	} else {
+		return nil
+	}
 }
