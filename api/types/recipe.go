@@ -12,7 +12,7 @@ import (
 type Recipe struct {
 	Title        string       `json:"title" validate:"recipetitle"`
 	Notes        string       `json:"notes" validate:"recipenotes"`
-	Ingredients  []Ingredient `json:"ingredients"`
+	Ingredients  []Ingredient `json:"ingredients" validate:"existence"`
 	CookTime     int          `json:"cooktime" validate:"time"`
 	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
 	PrepTime     int          `json:"preptime" validate:"time"`
@@ -44,7 +44,7 @@ type Step struct {
 //
 
 type Tag struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"tag"`
 }
 
 //
@@ -79,7 +79,7 @@ func (v RicettaValidator) validateRecipeTitle(i interface{}) error {
 	if title == "" {
 		return fmt.Errorf("Required field")
 	} else if titlelen > v.Constants.MAX_RECIPE_TITLE_LENGTH {
-		return fmt.Errorf("max length is %d", v.Constants.MAX_RECIPE_TITLE_LENGTH)
+		return fmt.Errorf("Exceeds max title length of %d", v.Constants.MAX_RECIPE_TITLE_LENGTH)
 	} else {
 		return nil
 	}
@@ -91,7 +91,7 @@ func (v RicettaValidator) validateRecipeNotes(i interface{}) error {
 	if notes == "" {
 		return fmt.Errorf("Required field")
 	} else if noteslen > v.Constants.MAX_RECIPE_NOTES_LENGTH {
-		return fmt.Errorf("max length is %d", v.Constants.MAX_RECIPE_NOTES_LENGTH)
+		return fmt.Errorf("Exceeds max notes length of %d", v.Constants.MAX_RECIPE_NOTES_LENGTH)
 	} else {
 		return nil
 	}
@@ -103,7 +103,7 @@ func (v RicettaValidator) validateIngredient(i interface{}) error {
 	if ingredient == "" {
 		return fmt.Errorf("Required field")
 	} else if ingredientlen > v.Constants.MAX_INGREDIENT_LENGTH {
-		return fmt.Errorf("max length is %d", v.Constants.MAX_INGREDIENT_LENGTH)
+		return fmt.Errorf("Exceeds max ingredient length of %d", v.Constants.MAX_INGREDIENT_LENGTH)
 	} else {
 		return nil
 	}
@@ -116,6 +116,18 @@ func (v RicettaValidator) validateURL(i interface{}) error {
 		return nil
 	} else if !v.Constants.URL_REGEX.MatchString(url) {
 		return fmt.Errorf("Not a valid URL string: %s", url)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateTag(i interface{}) error {
+	tag := i.(string)
+	taglen := utf8.RuneCountInString(tag)
+	if tag == "" {
+		return fmt.Errorf("Required field")
+	} else if taglen > v.Constants.MAX_TAG_LENGTH {
+		return fmt.Errorf("Exceeds max tag length of %d", v.Constants.MAX_TAG_LENGTH)
 	} else {
 		return nil
 	}

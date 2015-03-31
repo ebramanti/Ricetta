@@ -167,22 +167,35 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 		return
 	}
 
+	// Initial validation
 	if err := a.Validate(payload); err != nil {
 		a.Util.SimpleJsonValidationReason(w, 400, err)
 		return
 	}
 
-	for index, ingredient := range payload.Ingredients {
-		if err := a.Vd.Validator.ValidateAndTag(ingredient, "json"); err != nil {
-			a.Util.SliceElementValidationReason(w, 400, err, "ingredient", index)
-			return
+	// Validation for Slice Elements (Ingredients, Steps, Tags)
+	if ingredients := payload.Ingredients; ingredients != nil {
+		for index, ingredient := range ingredients {
+			if err := a.Vd.Validator.ValidateAndTag(ingredient, "json"); err != nil {
+				a.Util.SliceElementValidationReason(w, 400, err, "ingredient", index)
+				return
+			}
 		}
 	}
-
-	for index, step := range payload.Steps {
-		if err := a.Vd.Validator.ValidateAndTag(step, "json"); err != nil {
-			a.Util.SliceElementValidationReason(w, 400, err, "step", index)
-			return
+	if steps := payload.Steps; steps != nil {
+		for index, step := range payload.Steps {
+			if err := a.Vd.Validator.ValidateAndTag(step, "json"); err != nil {
+				a.Util.SliceElementValidationReason(w, 400, err, "step", index)
+				return
+			}
+		}
+	}
+	if tags := payload.Tags; tags != nil {
+		for index, tag := range payload.Tags {
+			if err := a.Vd.Validator.ValidateAndTag(tag, "json"); err != nil {
+				a.Util.SliceElementValidationReason(w, 400, err, "tag", index)
+				return
+			}
 		}
 	}
 

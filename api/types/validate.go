@@ -45,6 +45,7 @@ func NewValidator(config *goconfig.ConfigFile) *RicettaValidator {
 		"recipenotes": vd.validateRecipeNotes,
 		"ingredient":  vd.validateIngredient,
 		"url":         vd.validateURL,
+		"tag":         vd.validateTag,
 	}
 	return &vd
 }
@@ -58,6 +59,7 @@ func initializeConstants(config *goconfig.ConfigFile) vc {
 	c.MAX_RECIPE_TITLE_LENGTH, _ = config.GetInt("global", "max-recipe-title")
 	c.MAX_RECIPE_NOTES_LENGTH, _ = config.GetInt("global", "max-recipe-notes")
 	c.MAX_INGREDIENT_LENGTH, _ = config.GetInt("global", "max-ingredient-length")
+	c.MAX_TAG_LENGTH, _ = config.GetInt("global", "max-tag-length")
 
 	// Using int64 for query layer
 	c.AUTH_TOKEN_EXPIRES, _ = config.GetInt64("global", "auth-token-expires")
