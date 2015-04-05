@@ -11,7 +11,11 @@ import (
 )
 
 type QueryStrings struct {
-	FindToken string
+	FindToken        string
+	CreateRecipe     string
+	AddCuratorRel    string
+	CreateIngredient string
+	CreateStep       string
 }
 
 // Query is a private type, and stored locally to package.
@@ -65,7 +69,11 @@ func NewUUID() string {
 
 func QueryStringInit() QueryStrings {
 	return QueryStrings{
-		FindToken: parseQueryString("cql/findtoken.cql"),
+		FindToken:        parseQueryString("cql/findtoken.cql"),
+		CreateRecipe:     parseQueryString("cql/createrecipenode.cql"),
+		AddCuratorRel:    parseQueryString("cql/addcuratorrel.cql"),
+		CreateIngredient: parseQueryString("cql/createingredientnode.cql"),
+		CreateStep:       parseQueryString("cql/createstepnode.cql"),
 	}
 }
 
@@ -279,4 +287,44 @@ func (q Query) DestroyAuthToken(token string) bool {
 		Result: &deleted,
 	})
 	return len(deleted) > 0
+}
+
+func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
+	recipeQuery := q.Qs.CreateRecipeNode
+	if !recipe.Private {
+		recipeQuery = recipeQuery + q.Qs.AddCuratorRel
+	}
+	createdRecipe := []types.Recipe{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement:  recipeQuery,
+		Parameters: neoism.Props{},
+		Result:     &created,
+	})
+	if ok = len(created) > 0; !ok {
+		return types.Recipe{}, ok
+	} else {
+		createdIngredients := types.Ingredients
+		for index, ingredient := range recipe.Ingredients {
+			q.CypherOrPanic(&neoism.CypherQuery{
+				Statement: q.Qs.CreateIngredient,
+				Parameters: neoism.Props{
+					"rid":        createdRecipe.Id,
+					"id":         NewUUID(),
+					"now":        Now(),
+					"name":       ingredient.Name,
+					"amount":     ingredient.Amount,
+					"amountunit": ingredient.AmountUnit,
+					"url":        ingredient.URL,
+				},
+				Result: &createdIngredients[index],
+			})
+		}
+		if ok = (len(createdIngredients) == len(recipe.Ingredients)); !ok {
+			return types.Recipe{}, !ok
+		} else {
+			result := createdRecipe[0]
+			result.Ingredients = createdIngredients
+			return result, ok
+		}
+	}
 }
