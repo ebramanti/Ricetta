@@ -17,6 +17,7 @@ type vc struct {
 	MAX_RECIPE_NOTES_LENGTH int
 	MAX_INGREDIENT_LENGTH   int
 	MAX_TAG_LENGTH          int
+	MAX_STEP_LENGTH         int
 	AUTH_TOKEN_EXPIRES      int64
 
 	// Regex Constants
@@ -49,6 +50,7 @@ func NewValidator(config *goconfig.ConfigFile) *RicettaValidator {
 		"ingredient":  vd.validateIngredient,
 		"url":         vd.validateURL,
 		"tag":         vd.validateTag,
+		"step":        vd.validateStep,
 
 		// Required field Validation
 		"existence": vd.validateExistence,
@@ -66,6 +68,7 @@ func initializeConstants(config *goconfig.ConfigFile) vc {
 	c.MAX_RECIPE_NOTES_LENGTH, _ = config.GetInt("global", "max-recipe-notes")
 	c.MAX_INGREDIENT_LENGTH, _ = config.GetInt("global", "max-ingredient-length")
 	c.MAX_TAG_LENGTH, _ = config.GetInt("global", "max-tag-length")
+	c.MAX_STEP_LENGTH, _ = config.GetInt("global", "max-step-length")
 
 	// Using int64 for query layer
 	c.AUTH_TOKEN_EXPIRES, _ = config.GetInt64("global", "auth-token-expires")

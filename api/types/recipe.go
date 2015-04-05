@@ -17,7 +17,7 @@ type Recipe struct {
 	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
 	PrepTime     int          `json:"preptime" validate:"time"`
 	PrepTimeUnit string       `json:"preptimeunit" validate:"timeunit"`
-	Steps        []Step       `json:"steps"`
+	Steps        []Step       `json:"steps" validate:"existence"`
 	Tags         []Tag        `json:"tags"`
 	Public       bool         `json:"public"`
 }
@@ -34,7 +34,7 @@ type Ingredient struct {
 }
 
 type Step struct {
-	Instruction string `json:"instruction"`
+	Instruction string `json:"instruction" validate:"step"`
 	Time        int    `json:"time" validate:"time"`
 	TimeUnit    string `json:"timeunit" validate:"timeunit"`
 }
@@ -104,6 +104,18 @@ func (v RicettaValidator) validateIngredient(i interface{}) error {
 		return fmt.Errorf("Required field")
 	} else if ingredientlen > v.Constants.MAX_INGREDIENT_LENGTH {
 		return fmt.Errorf("Exceeds max ingredient length of %d", v.Constants.MAX_INGREDIENT_LENGTH)
+	} else {
+		return nil
+	}
+}
+
+func (v RicettaValidator) validateStep(i interface{}) error {
+	step := i.(string)
+	steplen := utf8.RuneCountInString(step)
+	if step == "" {
+		return fmt.Errorf("Required field")
+	} else if steplen > v.Constants.MAX_STEP_LENGTH {
+		return fmt.Errorf("Exceeds max step length of %d", v.Constants.MAX_STEP_LENGTH)
 	} else {
 		return nil
 	}
