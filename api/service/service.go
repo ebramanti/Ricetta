@@ -43,3 +43,7 @@ func (s Svc) DestroyAuthToken(token string) bool {
 func (s Svc) VerifyAuthToken(token string) bool {
 	return s.Query.FindAuthToken(token)
 }
+
+func (s Svc) GetHandleFromAuthorization(token string) (handle string, ok bool) {
+	return s.Query.DeriveHandleFromAuthToken(token)
+}

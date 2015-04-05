@@ -6,14 +6,20 @@ import (
 	"github.com/jadengore/Ricetta/api/types"
 	"github.com/jadengore/goconfig"
 	"github.com/jmcvetta/neoism"
+	"io/ioutil"
 	"time"
 )
+
+type QueryStrings struct {
+	FindToken string
+}
 
 // Query is a private type, and stored locally to package.
 
 type Query struct {
 	Db *neoism.Database
 	Vd *types.RicettaValidator
+	Qs QueryStrings
 }
 
 const (
@@ -31,6 +37,7 @@ func NewQuery(uri string, config *goconfig.ConfigFile) *Query {
 	query := Query{
 		neo4jdb,
 		types.NewValidator(config),
+		QueryStringInit(),
 	}
 
 	query.DatabaseInit()
@@ -54,6 +61,18 @@ func Now() time.Time {
 
 func NewUUID() string {
 	return uniuri.NewLen(uniuri.UUIDLen)
+}
+
+func QueryStringInit() QueryStrings {
+	return QueryStrings{
+		FindToken: parseQueryString("cql/findtoken.cql"),
+	}
+}
+
+func parseQueryString(filename string) string {
+	queryString, err := ioutil.ReadFile(filename)
+	panicIfErr(err)
+	return string(queryString)
 }
 
 // Initializes the Neo4j Database
@@ -214,12 +233,7 @@ func (q Query) FindAuthToken(token string) bool {
 		Handle string `json:"u.handle"`
 	}{}
 	q.cypherOrPanic(&neoism.CypherQuery{
-		Statement: `
-            MATCH   (u:User)<-[:SESSION_OF]-(a:AuthToken)
-            WHERE   a.value   = {token}
-            AND     a.expires > {now}
-            RETURN  u.handle
-        `,
+		Statement: q.Qs.FindToken,
 		Parameters: neoism.Props{
 			"token": token,
 			"now":   Now(),
@@ -227,6 +241,25 @@ func (q Query) FindAuthToken(token string) bool {
 		Result: &found,
 	})
 	return len(found) == 1
+}
+
+func (q Query) DeriveHandleFromAuthToken(token string) (handle string, ok bool) {
+	found := []struct {
+		Handle string `json:"u.handle"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: q.Qs.FindToken,
+		Parameters: neoism.Props{
+			"token": token,
+			"now":   Now(),
+		},
+		Result: &found,
+	})
+	if ok = len(found) > 0; ok {
+		return found[0].Handle, ok
+	} else {
+		return "", ok
+	}
 }
 
 func (q Query) DestroyAuthToken(token string) bool {
