@@ -10,16 +10,16 @@ import (
 //
 
 type Recipe struct {
-	Title        string       `json:"title" validate:"recipetitle"`
-	Notes        string       `json:"notes" validate:"recipenotes"`
-	Ingredients  []Ingredient `json:"ingredients" validate:"existence"`
-	CookTime     int          `json:"cooktime" validate:"time"`
-	CookTimeUnit string       `json:"cooktimeunit" validate:"timeunit"`
-	PrepTime     int          `json:"preptime" validate:"time"`
-	PrepTimeUnit string       `json:"preptimeunit" validate:"timeunit"`
-	Steps        []Step       `json:"steps" validate:"existence"`
-	Tags         []Tag        `json:"tags"`
-	Private      bool         `json:"private"`
+	Title        string      `json:"title" validate:"recipetitle"`
+	Notes        string      `json:"notes" validate:"recipenotes"`
+	Ingredients  Ingredients `json:"ingredients" validate:"existence"`
+	CookTime     int         `json:"cooktime" validate:"time"`
+	CookTimeUnit string      `json:"cooktimeunit" validate:"timeunit"`
+	PrepTime     int         `json:"preptime" validate:"time"`
+	PrepTimeUnit string      `json:"preptimeunit" validate:"timeunit"`
+	Steps        Steps       `json:"steps" validate:"existence"`
+	Tags         Tags        `json:"tags"`
+	Private      bool        `json:"private"`
 }
 
 //
@@ -27,6 +27,7 @@ type Recipe struct {
 //
 
 type Ingredient struct {
+	Id         int    `json:"id"`
 	Name       string `json:"name" validate:"ingredient"`
 	Amount     int    `json:"amount"`
 	AmountUnit string `json:"amountunit"`
@@ -34,10 +35,14 @@ type Ingredient struct {
 }
 
 type Step struct {
+	Id          int    `json:"id"`
 	Instruction string `json:"instruction" validate:"step"`
 	Time        int    `json:"time" validate:"time"`
 	TimeUnit    string `json:"timeunit" validate:"timeunit"`
 }
+
+type Ingredients []Ingredient
+type Steps []Steps
 
 //
 // Recipe Tag Types
@@ -46,6 +51,8 @@ type Step struct {
 type Tag struct {
 	Name string `json:"name" validate:"tag"`
 }
+
+type Tags []Tag
 
 //
 // Recipe Validator Functions
