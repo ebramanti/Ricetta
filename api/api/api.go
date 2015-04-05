@@ -194,7 +194,16 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 		}
 	}
 
-	w.WriteHeader(200)
-	w.WriteJson(payload)
-	return
+	if handle, ok := a.Svc.GetHandleFromAuthorization(a.Util.GetTokenFromHeader(r)); !ok {
+		a.Util.HandleFromAuthTokenFailure(w)
+		return
+	} else {
+		if recipe, ok := a.Svc.NewRecipe(handle, payload); !ok {
+			a.Util.SimpleJsonReason(w, 500, "Unexpected failure to create recipe")
+			return
+		} else {
+			w.WriteHeader(201)
+			w.WriteJson(recipe)
+		}
+	}
 }

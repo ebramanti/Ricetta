@@ -47,3 +47,7 @@ func (s Svc) VerifyAuthToken(token string) bool {
 func (s Svc) GetHandleFromAuthorization(token string) (handle string, ok bool) {
 	return s.Query.DeriveHandleFromAuthToken(token)
 }
+
+func (s Svc) NewRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
+	return s.Query.CreateRecipe(handle, recipe)
+}

@@ -60,3 +60,11 @@ func (u Util) FailedToAuthenticate(w rest.ResponseWriter) {
 		"reason":   "Missing, illegal or expired token",
 	})
 }
+
+func (u Util) HandleFromAuthTokenFailure(w rest.ResponseWriter) {
+	w.WriteHeader(500)
+	w.WriteJson(types.Json{
+		"response": "Failed to retrieve owner from auth token",
+		"reason":   "Internal Server Error",
+	})
+}
