@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/jadengore/Ricetta/api/service/query"
+	"github.com/jadengore/Ricetta/api/types"
 	"github.com/jadengore/goconfig"
 )
 

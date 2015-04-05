@@ -10,6 +10,7 @@ import (
 //
 
 type Recipe struct {
+	Id           string      `json:"id"`
 	Title        string      `json:"title" validate:"recipetitle"`
 	Notes        string      `json:"notes" validate:"recipenotes"`
 	Ingredients  Ingredients `json:"ingredients" validate:"existence"`

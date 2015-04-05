@@ -28,6 +28,7 @@ type Query struct {
 
 const (
 	NANOSECONDS_IN_DAY int64 = 86400000000000
+	CQL_DIR                  = "service/query/cql/"
 )
 
 var (
@@ -69,11 +70,11 @@ func NewUUID() string {
 
 func QueryStringInit() QueryStrings {
 	return QueryStrings{
-		FindToken:        parseQueryString("cql/findtoken.cql"),
-		CreateRecipe:     parseQueryString("cql/createrecipenode.cql"),
-		AddCuratorRel:    parseQueryString("cql/addcuratorrel.cql"),
-		CreateIngredient: parseQueryString("cql/createingredientnode.cql"),
-		CreateStep:       parseQueryString("cql/createstepnode.cql"),
+		FindToken:        parseQueryString(CQL_DIR + "findtoken.cql"),
+		CreateRecipe:     parseQueryString(CQL_DIR + "createrecipenode.cql"),
+		AddCuratorRel:    parseQueryString(CQL_DIR + "addcuratorrel.cql"),
+		CreateIngredient: parseQueryString(CQL_DIR + "createingredientnode.cql"),
+		CreateStep:       parseQueryString(CQL_DIR + "createstepnode.cql"),
 	}
 }
 
@@ -290,7 +291,7 @@ func (q Query) DestroyAuthToken(token string) bool {
 }
 
 func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
-	recipeQuery := q.Qs.CreateRecipeNode
+	recipeQuery := q.Qs.CreateRecipe
 	if !recipe.Private {
 		recipeQuery = recipeQuery + q.Qs.AddCuratorRel
 	}
@@ -298,17 +299,18 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 	q.cypherOrPanic(&neoism.CypherQuery{
 		Statement:  recipeQuery,
 		Parameters: neoism.Props{},
-		Result:     &created,
+		Result:     &createdRecipe,
 	})
-	if ok = len(created) > 0; !ok {
+	if ok = len(createdRecipe) > 0; !ok {
 		return types.Recipe{}, ok
 	} else {
-		createdIngredients := types.Ingredients
+		recipeid := createdRecipe[0].Id
+		createdIngredients := make(types.Ingredients, len(recipe.Ingredients))
 		for index, ingredient := range recipe.Ingredients {
-			q.CypherOrPanic(&neoism.CypherQuery{
+			q.cypherOrPanic(&neoism.CypherQuery{
 				Statement: q.Qs.CreateIngredient,
 				Parameters: neoism.Props{
-					"rid":        createdRecipe.Id,
+					"rid":        recipeid,
 					"id":         NewUUID(),
 					"now":        Now(),
 					"name":       ingredient.Name,
