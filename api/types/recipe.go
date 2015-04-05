@@ -19,7 +19,7 @@ type Recipe struct {
 	PrepTimeUnit string       `json:"preptimeunit" validate:"timeunit"`
 	Steps        []Step       `json:"steps" validate:"existence"`
 	Tags         []Tag        `json:"tags"`
-	Public       bool         `json:"public"`
+	Private      bool         `json:"private"`
 }
 
 //
