@@ -13,6 +13,8 @@ import (
 type QueryStrings struct {
 	FindToken        string
 	CreateRecipe     string
+	ReturnRecipe     string
+	FindCurator      string
 	AddCuratorRel    string
 	CreateIngredient string
 	CreateStep       string
@@ -72,6 +74,8 @@ func QueryStringInit() QueryStrings {
 	return QueryStrings{
 		FindToken:        parseQueryString(CQL_DIR + "findtoken.cql"),
 		CreateRecipe:     parseQueryString(CQL_DIR + "createrecipenode.cql"),
+		ReturnRecipe:     parseQueryString(CQL_DIR + "returnrecipenode.cql"),
+		FindCurator:      parseQueryString(CQL_DIR + "findcurator.cql"),
 		AddCuratorRel:    parseQueryString(CQL_DIR + "addcuratorrel.cql"),
 		CreateIngredient: parseQueryString(CQL_DIR + "createingredientnode.cql"),
 		CreateStep:       parseQueryString(CQL_DIR + "createstepnode.cql"),
@@ -293,13 +297,23 @@ func (q Query) DestroyAuthToken(token string) bool {
 func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
 	recipeQuery := q.Qs.CreateRecipe
 	if !recipe.Private {
-		recipeQuery = recipeQuery + q.Qs.AddCuratorRel
+		recipeQuery = q.Qs.FindCurator + recipeQuery + q.Qs.AddCuratorRel
 	}
 	createdRecipe := []types.Recipe{}
 	q.cypherOrPanic(&neoism.CypherQuery{
-		Statement:  recipeQuery,
-		Parameters: neoism.Props{},
-		Result:     &createdRecipe,
+		Statement: recipeQuery + q.Qs.ReturnRecipe,
+		Parameters: neoism.Props{
+			"handle":       handle,
+			"id":           NewUUID(),
+			"now":          Now(),
+			"title":        recipe.Title,
+			"notes":        recipe.Notes,
+			"cooktime":     recipe.CookTime,
+			"cooktimeunit": recipe.CookTimeUnit,
+			"preptime":     recipe.PrepTime,
+			"preptimeunit": recipe.PrepTimeUnit,
+		},
+		Result: &createdRecipe,
 	})
 	if ok = len(createdRecipe) > 0; !ok {
 		return types.Recipe{}, ok
@@ -311,7 +325,7 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 				Statement: q.Qs.CreateIngredient,
 				Parameters: neoism.Props{
 					"rid":        recipeid,
-					"id":         NewUUID(),
+					"id":         index + 1,
 					"now":        Now(),
 					"name":       ingredient.Name,
 					"amount":     ingredient.Amount,
@@ -324,9 +338,30 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 		if ok = (len(createdIngredients) == len(recipe.Ingredients)); !ok {
 			return types.Recipe{}, !ok
 		} else {
-			result := createdRecipe[0]
-			result.Ingredients = createdIngredients
-			return result, ok
+			createdSteps := make(types.Steps, len(recipe.Steps))
+			for index, step := range recipe.Steps {
+				q.cypherOrPanic(&neoism.CypherQuery{
+					Statement: q.Qs.CreateStep,
+					Parameters: neoism.Props{
+						"rid":         recipeid,
+						"id":          index + 1,
+						"now":         Now(),
+						"instruction": step.Instruction,
+						"time":        step.Time,
+						"timeunit":    step.TimeUnit,
+					},
+					Result: &createdSteps[index],
+				})
+			}
+			if ok = (len(createdSteps) == len(recipe.Steps)); !ok {
+				return types.Recipe{}, !ok
+			} else {
+				//TODO: tags
+				result := createdRecipe[0]
+				result.Ingredients = createdIngredients
+				result.Steps = createdSteps
+				return result, ok
+			}
 		}
 	}
 }

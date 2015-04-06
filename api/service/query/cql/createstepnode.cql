@@ -1,5 +1,5 @@
 MATCH (r:Recipe)
-WHERE r.id = {id}
+WHERE r.id = {rid}
 CREATE (s:Step {
     id: {id}
   , created: {now}

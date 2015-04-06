@@ -43,7 +43,7 @@ type Step struct {
 }
 
 type Ingredients []Ingredient
-type Steps []Steps
+type Steps []Step
 
 //
 // Recipe Tag Types
