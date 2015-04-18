@@ -28,11 +28,11 @@ type Recipe struct {
 //
 
 type Ingredient struct {
-	Id         int    `json:"id"`
-	Name       string `json:"name" validate:"ingredient"`
-	Amount     int    `json:"amount"`
-	AmountUnit string `json:"amountunit"`
-	URL        string `json:"url" validate:"url"`
+	Id         int     `json:"id"`
+	Name       string  `json:"name" validate:"ingredient"`
+	Amount     float64 `json:"amount"`
+	AmountUnit string  `json:"amountunit"`
+	URL        string  `json:"url" validate:"url"`
 }
 
 type Step struct {

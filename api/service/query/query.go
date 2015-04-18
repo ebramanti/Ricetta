@@ -321,6 +321,7 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 		recipeid := createdRecipe[0].Id
 		createdIngredients := make(types.Ingredients, len(recipe.Ingredients))
 		for index, ingredient := range recipe.Ingredients {
+			created := types.Ingredients{}
 			q.cypherOrPanic(&neoism.CypherQuery{
 				Statement: q.Qs.CreateIngredient,
 				Parameters: neoism.Props{
@@ -332,14 +333,18 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 					"amountunit": ingredient.AmountUnit,
 					"url":        ingredient.URL,
 				},
-				Result: &createdIngredients[index],
+				Result: &created,
 			})
+			if len(created) > 0 {
+				createdIngredients[index] = created[0]
+			}
 		}
 		if ok = (len(createdIngredients) == len(recipe.Ingredients)); !ok {
 			return types.Recipe{}, !ok
 		} else {
 			createdSteps := make(types.Steps, len(recipe.Steps))
 			for index, step := range recipe.Steps {
+				created := types.Steps{}
 				q.cypherOrPanic(&neoism.CypherQuery{
 					Statement: q.Qs.CreateStep,
 					Parameters: neoism.Props{
@@ -350,8 +355,11 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 						"time":        step.Time,
 						"timeunit":    step.TimeUnit,
 					},
-					Result: &createdSteps[index],
+					Result: &created,
 				})
+				if len(created) > 0 {
+					createdSteps[index] = created[0]
+				}
 			}
 			if ok = (len(createdSteps) == len(recipe.Steps)); !ok {
 				return types.Recipe{}, !ok

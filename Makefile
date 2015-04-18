@@ -1,5 +1,6 @@
 API_SERVER      = api
 API_TEST_DIR    = test
+WEB_SERVER      = web
 DOCS_DIR        = api/docs
 
 .PHONY: api
@@ -9,6 +10,10 @@ api-server:
 .PHONY: test-api
 api-test:
 	jasmine-node api/test --verbose
+
+.PHONY: serve
+serve:
+	cd $(WEB_SERVER); python -m SimpleHTTPServer
 
 .PHONY: docs
 docs:
