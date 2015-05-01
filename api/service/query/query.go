@@ -19,6 +19,8 @@ type QueryStrings struct {
 	CreateIngredient string
 	CreateStep       string
 	GetOwnRecipes    string
+	GetIngredients   string
+	GetSteps         string
 }
 
 // Query is a private type, and stored locally to package.
@@ -81,6 +83,8 @@ func QueryStringInit() QueryStrings {
 		CreateIngredient: parseQueryString(CQL_DIR + "createingredientnode.cql"),
 		CreateStep:       parseQueryString(CQL_DIR + "createstepnode.cql"),
 		GetOwnRecipes:    parseQueryString(CQL_DIR + "getownrecipes.cql"),
+		GetIngredients:   parseQueryString(CQL_DIR + "getingredients.cql"),
+		GetSteps:         parseQueryString(CQL_DIR + "getsteps.cql"),
 	}
 }
 
@@ -377,9 +381,35 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 }
 
 func (q Query) GetOwnRecipes(handle string) (res types.Recipes, ok bool) {
-	// recipes := types.Recipes{}
-	// q.cypherOrPanic(&neoism.CypherQuery{
-	// 	Statement: q.Qs.
-	// })
-	return types.Recipes{}, true
+	recipes := types.Recipes{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: q.Qs.GetOwnRecipes,
+		Parameters: neoism.Props{
+			"handle": handle,
+		},
+		Result: &recipes,
+	})
+	for index, recipe := range recipes {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetIngredients,
+			Parameters: neoism.Props{
+				"rid": recipe.Id,
+			},
+			Result: &recipes[index].Ingredients,
+		})
+	}
+	for index, recipe := range recipes {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetSteps,
+			Parameters: neoism.Props{
+				"rid": recipe.Id,
+			},
+			Result: &recipes[index].Steps,
+		})
+	}
+	if ok := len(recipes) > 0; ok {
+		return recipes, ok
+	} else {
+		return types.Recipes{}, ok
+	}
 }

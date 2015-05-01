@@ -16,7 +16,7 @@ var testing = flag.Bool("testing", false, "For API testing")
 func main() {
 	config, _ := goconfig.ReadConfigFile("../api-config.cfg")
 	port, _ := config.GetString("default", "server-port")
-	uri, _ := config.GetString("local", "db-url")
+	uri, _ := config.GetString("production", "db-url")
 
 	api := a.NewApi(uri, config)
 	handler, err := routes.MakeHandler(*api, *testing)

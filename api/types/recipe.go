@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"time"
 	"unicode/utf8"
 )
 
@@ -22,6 +23,8 @@ type Recipe struct {
 	Steps        Steps       `json:"steps" validate:"existence"`
 	Tags         Tags        `json:"tags"`
 	Private      bool        `json:"private"`
+	Created      time.Time   `json:"created"`
+	LastModified time.Time   `json:"last_modified"`
 }
 
 //

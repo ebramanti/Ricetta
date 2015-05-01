@@ -3,7 +3,7 @@ API_TEST_DIR    = test
 WEB_SERVER      = web
 DOCS_DIR        = api/docs
 
-.PHONY: api
+.PHONY: api-server
 api-server:
 	cd $(API_SERVER); go run main.go
 
