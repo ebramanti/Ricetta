@@ -18,6 +18,7 @@ type QueryStrings struct {
 	AddCuratorRel    string
 	CreateIngredient string
 	CreateStep       string
+	GetOwnRecipes    string
 }
 
 // Query is a private type, and stored locally to package.
@@ -79,6 +80,7 @@ func QueryStringInit() QueryStrings {
 		AddCuratorRel:    parseQueryString(CQL_DIR + "addcuratorrel.cql"),
 		CreateIngredient: parseQueryString(CQL_DIR + "createingredientnode.cql"),
 		CreateStep:       parseQueryString(CQL_DIR + "createstepnode.cql"),
+		GetOwnRecipes:    parseQueryString(CQL_DIR + "getownrecipes.cql"),
 	}
 }
 
@@ -372,4 +374,12 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 			}
 		}
 	}
+}
+
+func (q Query) GetOwnRecipes(handle string) (res types.Recipes, ok bool) {
+	// recipes := types.Recipes{}
+	// q.cypherOrPanic(&neoism.CypherQuery{
+	// 	Statement: q.Qs.
+	// })
+	return types.Recipes{}, true
 }

@@ -3,16 +3,19 @@ package service
 import (
 	"github.com/jadengore/Ricetta/api/service/query"
 	"github.com/jadengore/Ricetta/api/types"
+	"github.com/jadengore/Ricetta/api/util"
 	"github.com/jadengore/goconfig"
 )
 
 type Svc struct {
 	Query *query.Query
+	Util  *util.Util
 }
 
 func NewService(uri string, config *goconfig.ConfigFile) *Svc {
 	s := &Svc{
 		query.NewQuery(uri, config),
+		&util.Util{},
 	}
 	return s
 }
@@ -45,10 +48,28 @@ func (s Svc) VerifyAuthToken(token string) bool {
 	return s.Query.FindAuthToken(token)
 }
 
+func (s Svc) UserExists(handle string) bool {
+	return s.Query.UserExistsByHandle(handle)
+}
+
 func (s Svc) GetHandleFromAuthorization(token string) (handle string, ok bool) {
 	return s.Query.DeriveHandleFromAuthToken(token)
 }
 
 func (s Svc) NewRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
 	return s.Query.CreateRecipe(handle, recipe)
+}
+
+func (s Svc) GetOwnRecipes(handle string) (recipes types.Recipes, ok bool) {
+	if ok := s.UserExists(handle); ok {
+		if recipes, ok := s.Query.GetOwnRecipes(handle); ok {
+			recipes = s.Util.AddRecipeUrlToArray(recipes)
+			return recipes, ok
+		} else {
+			return types.Recipes{}, ok
+		}
+
+	} else {
+		return types.Recipes{}, ok
+	}
 }

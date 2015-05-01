@@ -11,6 +11,7 @@ import (
 
 type Recipe struct {
 	Id           string      `json:"id"`
+	URL          string      `json:"url"`
 	Title        string      `json:"title" validate:"recipetitle"`
 	Notes        string      `json:"notes" validate:"recipenotes"`
 	Ingredients  Ingredients `json:"ingredients" validate:"existence"`
@@ -42,6 +43,7 @@ type Step struct {
 	TimeUnit    string `json:"timeunit" validate:"timeunit"`
 }
 
+type Recipes []Recipe
 type Ingredients []Ingredient
 type Steps []Step
 

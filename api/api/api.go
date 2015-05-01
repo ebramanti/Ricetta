@@ -207,3 +207,25 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 		}
 	}
 }
+
+func (a Api) GetRecipes(w rest.ResponseWriter, r *rest.Request) {
+	if !a.Authenticate(r) {
+		a.Util.FailedToAuthenticate(w)
+		return
+	}
+
+	// Get query param here
+
+	if self, ok := a.Svc.GetHandleFromAuthorization(a.Util.GetTokenFromHeader(r)); !ok {
+		a.Util.HandleFromAuthTokenFailure(w)
+		return
+	} else {
+		// Add more query param logic here
+		if recipesView, ok := a.Svc.GetOwnRecipes(self); !ok {
+			a.Util.SimpleJsonReason(w, 500, "Unexpected failure to get your recipes")
+		} else {
+			w.WriteHeader(200)
+			w.WriteJson(recipesView)
+		}
+	}
+}
