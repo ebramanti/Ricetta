@@ -210,8 +210,14 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 
 func (a Api) GetRecipes(w rest.ResponseWriter, r *rest.Request) {
 	if !a.Authenticate(r) {
-		a.Util.FailedToAuthenticate(w)
-		return
+		if recipesView, ok := a.Svc.GetCuratedRecipes(); !ok {
+			a.Util.SimpleJsonReason(w, 500, "Unexpected failure to get your recipes")
+			return
+		} else {
+			w.WriteHeader(200)
+			w.WriteJson(recipesView)
+			return
+		}
 	}
 
 	// Get query param here

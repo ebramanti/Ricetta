@@ -73,3 +73,12 @@ func (s Svc) GetOwnRecipes(handle string) (recipes types.Recipes, ok bool) {
 		return types.Recipes{}, ok
 	}
 }
+
+func (s Svc) GetCuratedRecipes() (recipes types.Recipes, ok bool) {
+	if recipes, ok := s.Query.GetCuratedRecipes(); ok {
+		recipes = s.Util.AddRecipeUrlToArray(recipes)
+		return recipes, ok
+	} else {
+		return types.Recipes{}, ok
+	}
+}

@@ -11,16 +11,17 @@ import (
 )
 
 type QueryStrings struct {
-	FindToken        string
-	CreateRecipe     string
-	ReturnRecipe     string
-	FindCurator      string
-	AddCuratorRel    string
-	CreateIngredient string
-	CreateStep       string
-	GetOwnRecipes    string
-	GetIngredients   string
-	GetSteps         string
+	FindToken         string
+	CreateRecipe      string
+	ReturnRecipe      string
+	FindCurator       string
+	AddCuratorRel     string
+	CreateIngredient  string
+	CreateStep        string
+	GetOwnRecipes     string
+	GetIngredients    string
+	GetSteps          string
+	GetCuratedRecipes string
 }
 
 // Query is a private type, and stored locally to package.
@@ -75,16 +76,17 @@ func NewUUID() string {
 
 func QueryStringInit() QueryStrings {
 	return QueryStrings{
-		FindToken:        parseQueryString(CQL_DIR + "findtoken.cql"),
-		CreateRecipe:     parseQueryString(CQL_DIR + "createrecipenode.cql"),
-		ReturnRecipe:     parseQueryString(CQL_DIR + "returnrecipenode.cql"),
-		FindCurator:      parseQueryString(CQL_DIR + "findcurator.cql"),
-		AddCuratorRel:    parseQueryString(CQL_DIR + "addcuratorrel.cql"),
-		CreateIngredient: parseQueryString(CQL_DIR + "createingredientnode.cql"),
-		CreateStep:       parseQueryString(CQL_DIR + "createstepnode.cql"),
-		GetOwnRecipes:    parseQueryString(CQL_DIR + "getownrecipes.cql"),
-		GetIngredients:   parseQueryString(CQL_DIR + "getingredients.cql"),
-		GetSteps:         parseQueryString(CQL_DIR + "getsteps.cql"),
+		FindToken:         parseQueryString(CQL_DIR + "findtoken.cql"),
+		CreateRecipe:      parseQueryString(CQL_DIR + "createrecipenode.cql"),
+		ReturnRecipe:      parseQueryString(CQL_DIR + "returnrecipenode.cql"),
+		FindCurator:       parseQueryString(CQL_DIR + "findcurator.cql"),
+		AddCuratorRel:     parseQueryString(CQL_DIR + "addcuratorrel.cql"),
+		CreateIngredient:  parseQueryString(CQL_DIR + "createingredientnode.cql"),
+		CreateStep:        parseQueryString(CQL_DIR + "createstepnode.cql"),
+		GetOwnRecipes:     parseQueryString(CQL_DIR + "getownrecipes.cql"),
+		GetCuratedRecipes: parseQueryString(CQL_DIR + "getcuratedrecipes.cql"),
+		GetIngredients:    parseQueryString(CQL_DIR + "getingredients.cql"),
+		GetSteps:          parseQueryString(CQL_DIR + "getsteps.cql"),
 	}
 }
 
@@ -388,6 +390,37 @@ func (q Query) GetOwnRecipes(handle string) (res types.Recipes, ok bool) {
 			"handle": handle,
 		},
 		Result: &recipes,
+	})
+	for index, recipe := range recipes {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetIngredients,
+			Parameters: neoism.Props{
+				"rid": recipe.Id,
+			},
+			Result: &recipes[index].Ingredients,
+		})
+	}
+	for index, recipe := range recipes {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetSteps,
+			Parameters: neoism.Props{
+				"rid": recipe.Id,
+			},
+			Result: &recipes[index].Steps,
+		})
+	}
+	if ok := len(recipes) > 0; ok {
+		return recipes, ok
+	} else {
+		return types.Recipes{}, ok
+	}
+}
+
+func (q Query) GetCuratedRecipes() (res types.Recipes, ok bool) {
+	recipes := types.Recipes{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: q.Qs.GetCuratedRecipes,
+		Result:    &recipes,
 	})
 	for index, recipe := range recipes {
 		q.cypherOrPanic(&neoism.CypherQuery{
