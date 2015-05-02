@@ -1,0 +1,49 @@
+<div id="circleCreateContainer" class="container">
+    <h3 id="containerHeader">Create Circle</h3>
+    <div id="profileFieldsContainer">
+		<div id="profileForm" class="row">
+		
+		  <div>
+		    <label>Name</label>
+		    <div class="circleCreateInput">
+		        <input id="circle-name" type="text" name="Location"
+		           placeholder="Circle Name" data-role="tagsinput"/>
+		    </div>
+		  </div>
+
+		  <div>
+		    <label >Description</label>
+		    <div class="circleCreateInput">
+		        <textarea id="description" rows="5" placeholder=""></textarea>
+		    </div>
+		  </div>
+
+		  <div id="visibility">
+		      <label for="visibilitySelector" >Visibility</label>
+			  <div class="circleCreateInput">
+				<select id="visibilitySelector">
+				  <option>private</option>
+				  <option>public</option>
+				</select>
+			  </div>
+	      </div>
+
+		  <div class="page-header">
+		    <h3>Members</h3>
+		  </div>
+		 
+		  <div id="admin">
+		      <label for="adminSelector">Admin</label>
+			  <div class="circleCreateInput">
+				<select id="adminSelector">
+				  <option>Me</option>
+				  <option>Other Friend</option>
+				</select>
+			  </div>
+	      </div>
+
+  		  <button id="circleAddMemberButton" type="submit">Create Circle</button>
+		</div>
+    </div>
+</div>
+

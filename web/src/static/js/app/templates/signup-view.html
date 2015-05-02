@@ -1,0 +1,60 @@
+<div id="signUpContainer">
+  <form method="post" action="/signup" id="signupform" role="form" novalidate="novalidate">
+    <h3 id="containerHeader">Sign up</h3>
+
+    <div class="fieldgroup">
+      <label for="handle">Choose a handle</label>
+      <div>
+        <input type="text" name="handle" id="handle" placeholder="@handle">
+      </div>
+    </div>
+
+    <div class="fieldgroup">
+      <label for="email">Email address</label>
+      <div>
+          <input type="email" name = "email" id="input-email" placeholder="Enter email">
+      </div>
+    </div>
+
+    <div class="fieldgroup">
+      <label>Password</label>
+      <div>
+        <input type="password" id="pass1" name="password" placeholder="At least 8 characters">
+      </div>
+          <div class="password-meter">
+      <div class="password-meter-message"> </div>
+      <div class="password-meter-bg">
+        <div class="password-meter-bar"></div>
+      </div>
+    </div>
+    </div>
+
+    <div class="fieldgroup">
+      <label>Confirm password</label>
+      <div>
+        <input type="password" id ="pass2" name="confirmPassword" placeholder="Re-enter your password" >
+        <span id="confirmMessage" class="confirmMessage"></span>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <div class="checkbox">
+          <div class="fieldgroup">
+            <label>
+              <button type="submit" id="signup">Sign up</button>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div id="existingAccount">       
+        <p id="existingUserForm">Already have an account?</p>
+        <a type="button" id="goToLogin">Log in</a>
+      </div>
+    </div>
+
+  </form>
+</div>
