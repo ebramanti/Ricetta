@@ -1,4 +1,6 @@
 RETURN r.id AS id
+     , r.created as created
+     , r.last_modified as last_modified
      , r.title AS title
      , r.notes AS notes
      , r.cooktime AS cooktime
