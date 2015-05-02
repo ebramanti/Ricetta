@@ -82,3 +82,21 @@ func (s Svc) GetCuratedRecipes() (recipes types.Recipes, ok bool) {
 		return types.Recipes{}, ok
 	}
 }
+
+func (s Svc) GetVisibleRecipeById(handle, id string) (recipe types.Recipe, ok bool) {
+	if recipe, ok := s.Query.GetVisibleRecipeById(handle, id); ok {
+		recipe = s.Util.AddRecipeUrl(recipe)
+		return recipe, ok
+	} else {
+		return types.Recipe{}, ok
+	}
+}
+
+func (s Svc) GetCuratedRecipeById(id string) (recipe types.Recipe, ok bool) {
+	if recipe, ok := s.Query.GetCuratedRecipeById(id); ok {
+		recipe = s.Util.AddRecipeUrl(recipe)
+		return recipe, ok
+	} else {
+		return types.Recipe{}, ok
+	}
+}

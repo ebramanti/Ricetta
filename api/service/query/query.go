@@ -22,6 +22,9 @@ type QueryStrings struct {
 	GetIngredients    string
 	GetSteps          string
 	GetCuratedRecipes string
+	GetOwnRecipe      string
+	GetVisibleRecipe  string
+	RecipeAuthor      string
 }
 
 // Query is a private type, and stored locally to package.
@@ -87,6 +90,9 @@ func QueryStringInit() QueryStrings {
 		GetCuratedRecipes: parseQueryString(CQL_DIR + "getcuratedrecipes.cql"),
 		GetIngredients:    parseQueryString(CQL_DIR + "getingredients.cql"),
 		GetSteps:          parseQueryString(CQL_DIR + "getsteps.cql"),
+		GetOwnRecipe:      parseQueryString(CQL_DIR + "getownrecipe.cql"),
+		GetVisibleRecipe:  parseQueryString(CQL_DIR + "getvisiblerecipe.cql"),
+		RecipeAuthor:      parseQueryString(CQL_DIR + "recipeauthor.cql"),
 	}
 }
 
@@ -444,5 +450,89 @@ func (q Query) GetCuratedRecipes() (res types.Recipes, ok bool) {
 		return recipes, ok
 	} else {
 		return types.Recipes{}, ok
+	}
+}
+
+func (q Query) GetVisibleRecipeById(handle string, id string) (r types.Recipe, ok bool) {
+	check := []struct {
+		Handle string `json:"handle"`
+	}{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: q.Qs.RecipeAuthor,
+		Parameters: neoism.Props{
+			"handle": handle,
+			"rid":    id,
+		},
+		Result: &check,
+	})
+	recipe := types.Recipes{}
+	if check[0].Handle == handle {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetOwnRecipe,
+			Parameters: neoism.Props{
+				"handle": handle,
+				"rid":    id,
+			},
+			Result: &recipe,
+		})
+	} else {
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetVisibleRecipe,
+			Parameters: neoism.Props{
+				"rid": id,
+			},
+			Result: &recipe,
+		})
+	}
+	if ok := len(recipe) > 0; ok {
+		r = recipe[0]
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetIngredients,
+			Parameters: neoism.Props{
+				"rid": r.Id,
+			},
+			Result: &r.Ingredients,
+		})
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetSteps,
+			Parameters: neoism.Props{
+				"rid": r.Id,
+			},
+			Result: &r.Steps,
+		})
+		return r, ok
+	} else {
+		return types.Recipe{}, ok
+	}
+}
+
+func (q Query) GetCuratedRecipeById(id string) (r types.Recipe, ok bool) {
+	recipe := types.Recipes{}
+	q.cypherOrPanic(&neoism.CypherQuery{
+		Statement: q.Qs.GetVisibleRecipe,
+		Parameters: neoism.Props{
+			"rid": id,
+		},
+		Result: &recipe,
+	})
+	if ok := len(recipe) > 0; ok {
+		r = recipe[0]
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetIngredients,
+			Parameters: neoism.Props{
+				"rid": r.Id,
+			},
+			Result: &r.Ingredients,
+		})
+		q.cypherOrPanic(&neoism.CypherQuery{
+			Statement: q.Qs.GetSteps,
+			Parameters: neoism.Props{
+				"rid": r.Id,
+			},
+			Result: &r.Steps,
+		})
+		return r, ok
+	} else {
+		return types.Recipe{}, ok
 	}
 }

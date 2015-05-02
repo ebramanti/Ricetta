@@ -239,9 +239,10 @@ func (a Api) GetRecipes(w rest.ResponseWriter, r *rest.Request) {
 func (a Api) GetRecipeById(w rest.ResponseWriter, r *rest.Request) {
 	id := r.PathParam("id")
 	if !a.Authenticate(r) {
-		if recipe, ok := a.Svc.GetCuratedRecipeById(handle, id); ok {
+		if recipe, ok := a.Svc.GetCuratedRecipeById(id); ok {
 			w.WriteHeader(200)
 			w.WriteJson(recipe)
+			return
 		} else {
 			a.Util.SimpleJsonReason(w, 404, "No such recipe with id "+id+" could be found")
 			return
@@ -254,6 +255,7 @@ func (a Api) GetRecipeById(w rest.ResponseWriter, r *rest.Request) {
 		if recipe, ok := a.Svc.GetVisibleRecipeById(handle, id); ok {
 			w.WriteHeader(200)
 			w.WriteJson(recipe)
+			return
 		} else {
 			a.Util.SimpleJsonReason(w, 404, "No such recipe with id "+id+" could be found")
 			return
