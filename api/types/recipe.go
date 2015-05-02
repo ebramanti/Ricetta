@@ -12,6 +12,7 @@ import (
 
 type Recipe struct {
 	Id           string      `json:"id"`
+	Author       string      `json:"author"`
 	URL          string      `json:"url"`
 	Title        string      `json:"title" validate:"recipetitle"`
 	Notes        string      `json:"notes" validate:"recipenotes"`

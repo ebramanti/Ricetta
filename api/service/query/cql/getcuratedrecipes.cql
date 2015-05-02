@@ -1,6 +1,7 @@
-MATCH  (r:Recipe)-[:CURATED_BY]->(pc:PublicCurator)
+MATCH  (u:User)<-[:CREATOR]-(r:Recipe)-[:CURATED_BY]->(pc:PublicCurator)
 RETURN r.id AS id
      , r.title as title
+     , u.handle as author
      , r.notes as notes
      , r.cooktime as cooktime
      , r.cooktimeunit as cooktimeunit

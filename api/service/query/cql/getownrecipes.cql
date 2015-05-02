@@ -1,6 +1,7 @@
 MATCH  (r:Recipe)-[:CREATOR]->(u:User)
 WHERE  u.handle = {handle}
 RETURN r.id AS id
+     , u.handle as author
      , r.title as title
      , r.notes as notes
      , r.cooktime as cooktime
