@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var MessageView = require('app/views/message-view').MessageView;
     var Message = require('app/models/message').Message;
 
-    var MessagesView = marionette.CompositeView.extend({
+    var CuratorView = marionette.CompositeView.extend({
         childView: MessageView,
         childViewContainer: '#messages',
         template: template,

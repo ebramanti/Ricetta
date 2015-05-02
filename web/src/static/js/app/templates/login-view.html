@@ -1,33 +1,31 @@
 <div id="loginContainer">
-  <form method="post" action="/login" id="loginForm" role="form" novalidate="novalidate">
-    <h3 id="containerHeader">Log in</h3>
-    <div class="fieldgroup">
-      <p id="response"></p>
-      <label for="handle">Handle</label>
-      <div class="fieldgroup">
-          <input type="text" name="handle" id="handle" placeholder="Enter handle">
-      </div>
-    </div>
-    <div class="fieldgroup">
-      <label for="inputName">Password</label>
-      <div class="fieldgroup">
-        <input type="password" id="pass1" class="form-control" name="password" placeholder="Enter your password">
-      </div>
-    </div>
-    <div>
-      <div>
-        <div class="checkbox">
-          <label>
-            <button type="submit" id="login">Log in</button>
-          </label>
+  <form class="form-horizontal" method="post" action="/login" id="loginForm" role="form" novalidate="novalidate">
+    <fieldset>
+      <legend id="containerHeader">Log in</legend>
+
+      <div class="form-group">
+        <label for="handle" class="col-lg-2 control-label">Handle</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" name="handle" id="handle" placeholder="Enter handle">
         </div>
       </div>
-    </div>
-    <div>
-      <div id="makeNewAccount">
-        <p id="existingUserForm">New to Ricetta?</p>
-        <a type="button" id="goToSignup">Sign up</a>
+      <div class="form-group">
+        <label for="inputName" class="col-lg-2 control-label">Password</label>
+        <div class="col-lg-10">
+          <input type="password" id="pass1" class="form-control" name="password" placeholder="Enter your password">
+        </div>
       </div>
-    </div>
+      <div class="form-group">
+          <div class="col-lg-10 col-lg-offset-2">
+            <button type="submit" class="btn btn-primary" id="login">Login</button>
+          </div>
+      </div>
+      <div>
+        <div id="makeNewAccount">
+          <p id="existingUserForm">New to Ricetta?</p>
+          <a class="btn btn-info" id="goToSignup">Sign up</a>
+        </div>
+      </div>
+    </fieldset>
   </form>
 </div>
