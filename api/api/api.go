@@ -235,3 +235,28 @@ func (a Api) GetRecipes(w rest.ResponseWriter, r *rest.Request) {
 		}
 	}
 }
+
+func (a Api) GetRecipeById(w rest.ResponseWriter, r *rest.Request) {
+	id := r.PathParam("id")
+	if !a.Authenticate(r) {
+		if recipe, ok := a.Svc.GetCuratedRecipeById(handle, id); ok {
+			w.WriteHeader(200)
+			w.WriteJson(recipe)
+		} else {
+			a.Util.SimpleJsonReason(w, 404, "No such recipe with id "+id+" could be found")
+			return
+		}
+	}
+	if handle, ok := a.Svc.GetHandleFromAuthorization(a.Util.GetTokenFromHeader(r)); !ok {
+		a.Util.HandleFromAuthTokenFailure(w)
+		return
+	} else {
+		if recipe, ok := a.Svc.GetVisibleRecipeById(handle, id); ok {
+			w.WriteHeader(200)
+			w.WriteJson(recipe)
+		} else {
+			a.Util.SimpleJsonReason(w, 404, "No such recipe with id "+id+" could be found")
+			return
+		}
+	}
+}

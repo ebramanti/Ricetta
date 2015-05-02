@@ -17,6 +17,7 @@ func MakeHandler(api api.Api, disableLogs bool) (rest.ResourceHandler, error) {
 		&rest.Route{"DELETE", "/sessions", api.Logout},
 		&rest.Route{"POST", "/recipes", api.NewRecipe},
 		&rest.Route{"GET", "/recipes", api.GetRecipes},
+		&rest.Route{"GET", "/recipes/:id", api.GetRecipeById},
 	)
 
 	return handler, err
