@@ -25,6 +25,9 @@ type QueryStrings struct {
 	GetOwnRecipe      string
 	GetVisibleRecipe  string
 	RecipeAuthor      string
+	TagExists         string
+	CreateNewTag      string
+	AddRelationToTag  string
 }
 
 // Query is a private type, and stored locally to package.
@@ -93,6 +96,9 @@ func QueryStringInit() QueryStrings {
 		GetOwnRecipe:      parseQueryString(CQL_DIR + "getownrecipe.cql"),
 		GetVisibleRecipe:  parseQueryString(CQL_DIR + "getvisiblerecipe.cql"),
 		RecipeAuthor:      parseQueryString(CQL_DIR + "recipeauthor.cql"),
+		TagExists:         parseQueryString(CQL_DIR + "tagexists.cql"),
+		CreateNewTag:      parseQueryString(CQL_DIR + "createnewtag.cql"),
+		AddRelationToTag:  parseQueryString(CQL_DIR + "addrelationtotag.cql"),
 	}
 }
 
@@ -378,11 +384,49 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 			if ok = (len(createdSteps) == len(recipe.Steps)); !ok {
 				return types.Recipe{}, !ok
 			} else {
-				//TODO: tags
-				result := createdRecipe[0]
-				result.Ingredients = createdIngredients
-				result.Steps = createdSteps
-				return result, ok
+				createdTags := make(types.Tags, len(recipe.Tags))
+				for index, tag := range recipe.Tags {
+					created := types.Tags{}
+					exists := types.Tags{}
+					q.cypherOrPanic(&neoism.CypherQuery{
+						Statement: q.Qs.TagExists,
+						Parameters: neoism.Props{
+							"name": tag.Name,
+						},
+						Result: &exists,
+					})
+					if len(exists) > 0 {
+						q.cypherOrPanic(&neoism.CypherQuery{
+							Statement: q.Qs.AddRelationToTag,
+							Parameters: neoism.Props{
+								"name": tag.Name,
+								"rid":  recipeid,
+							},
+							Result: &created,
+						})
+					} else {
+						q.cypherOrPanic(&neoism.CypherQuery{
+							Statement: q.Qs.CreateNewTag,
+							Parameters: neoism.Props{
+								"name": tag.Name,
+								"rid":  recipeid,
+							},
+							Result: &created,
+						})
+					}
+					if len(created) > 0 {
+						createdTags[index] = created[0]
+					}
+				}
+				if ok = (len(createdTags) == len(recipe.Tags)); !ok {
+					return types.Recipe{}, !ok
+				} else {
+					result := createdRecipe[0]
+					result.Ingredients = createdIngredients
+					result.Steps = createdSteps
+					result.Tags = createdTags
+					return result, ok
+				}
 			}
 		}
 	}
