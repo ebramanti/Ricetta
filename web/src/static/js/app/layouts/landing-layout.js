@@ -3,12 +3,14 @@ define(function(require, exports, module) {
     var template = require('hbs!../templates/layouts/landing-layout')
     var SignupView = require('app/views/signup-view').SignupView;
     var LoginView = require('app/views/login-view').LoginView;
+    // var CuratorView = require('app/views/curator-view').CuratorView;
     var Login = require('app/models/login').Login;
     var LandingLayout = marionette.LayoutView.extend({
         template: template,
 
         regions: {
-            container: '#containerArea'
+            container: '#containerArea',
+            curator: '#curatorArea'
         },
 
         ui: {
