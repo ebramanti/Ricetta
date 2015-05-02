@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("docs"))))
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../web/src"))))
 
 	http.Handle("/v1/", http.StripPrefix("/v1", &handler))
 
