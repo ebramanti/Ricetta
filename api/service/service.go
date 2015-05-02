@@ -57,7 +57,12 @@ func (s Svc) GetHandleFromAuthorization(token string) (handle string, ok bool) {
 }
 
 func (s Svc) NewRecipe(handle string, recipe types.Recipe) (res types.Recipe, ok bool) {
-	return s.Query.CreateRecipe(handle, recipe)
+	if recipe, ok := s.Query.CreateRecipe(handle, recipe); ok {
+		recipe = s.Util.AddRecipeUrl(recipe)
+		return recipe, ok
+	} else {
+		return types.Recipe{}, ok
+	}
 }
 
 func (s Svc) GetOwnRecipes(handle string) (recipes types.Recipes, ok bool) {
