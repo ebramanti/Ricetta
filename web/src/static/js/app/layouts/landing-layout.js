@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var SignupView = require('app/views/signup-view').SignupView;
     var LoginView = require('app/views/login-view').LoginView;
     // var CuratorView = require('app/views/curator-view').CuratorView;
+    var NavbarView = require('app/views/navbar-view').NavbarView;
     var Login = require('app/models/login').Login;
     var LandingLayout = marionette.LayoutView.extend({
         template: template,
@@ -25,13 +26,16 @@ define(function(require, exports, module) {
 
         onRender: function(options) {
             var signupView = new SignupView();
+            var navbarView = new NavbarView({});
             this.container.show(signupView);
+            this.curator.show(navbarView);
         },
 
         showLoginForm: function(options) {
             var loginView = new LoginView({
                 session: this.session
             });
+
 
             this.container.show(loginView);
         },
