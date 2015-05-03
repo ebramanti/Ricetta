@@ -21,7 +21,6 @@ define(function(require, exports, module) {
     app.addRegions({
         headerRegion: '#header',
         mainRegion: '#main',
-        sidebarRegion:'#sidebarMain'
     })
 
     app.addInitializer(function() {
