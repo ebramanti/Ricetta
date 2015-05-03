@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 
     var Recipes = require('app/collections/recipes').Recipes;
     var RecipesView = require('app/views/recipes-view').RecipesView;
+    var RecipeViewer = require('app/views/recipe-viewer').RecipeViewer;
 
     var HomeLayout = marionette.LayoutView.extend({
         template: template,
@@ -14,8 +15,16 @@ define(function(require, exports, module) {
             creator: '#recipe-creator'
         },
 
+        ui: {
+        },
+
+        events: {
+            'click .recipe': 'viewRecipe'
+        },
+
         initialize: function(options) {
             this.session = options.session;
+            this.recipes = new Recipes();
         },
 
         onRender: function() {
@@ -23,11 +32,18 @@ define(function(require, exports, module) {
         },
 
         showRecipeList: function(options) {
-            var recipes = new Recipes();
             var personalRecipes = new RecipesView({
-                collection: recipes
+                collection: this.recipes
             });
             this.list.show(personalRecipes);
+        },
+        viewRecipe: function(event) {
+            var id = $(event.currentTarget).attr('id');
+            var currentRecipe = this.recipes.get(id);
+            var currentRecipeView = new RecipeViewer({
+                model: currentRecipe
+            });
+            this.viewer.show(currentRecipeView);
         }
     });
     exports.HomeLayout = HomeLayout;
