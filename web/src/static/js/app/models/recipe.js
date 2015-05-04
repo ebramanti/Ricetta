@@ -5,11 +5,6 @@ define(function(require, exports, module) {
     var Recipe = Backbone.Model.extend({
         url: 'v1/recipes',
         defaults: {
-            id: null,
-            created: null,
-            last_modified: null,
-            author: null,
-            url: null,
             title: null,
             notes: null,
             ingredients: null,

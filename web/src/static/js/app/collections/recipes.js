@@ -8,12 +8,11 @@ define(function(require, exports, module) {
         url: 'v1/recipes',
         model: Recipe,
 
-        // parse: function(response) {
-        //     return response;
-        // },
-
-        initialize: function() {
-
+        initialize: function(options) {
+            var object = options || {curator: false}
+            if (object.curator) {
+                this.url = this.url + '?curator'
+            }
         }
     });
 

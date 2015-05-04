@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
 
     var marionette = require('marionette');
-    var template = require('hbs!../templates/recipe-view');
+    var template = require('hbs!../templates/recipe-curated-view');
     var Recipe = require('app/models/recipe').Recipe;
 
-    var RecipeView = marionette.ItemView.extend({
+    var RecipeCuratedView = marionette.ItemView.extend({
         model: Recipe,
         template: template,
 
@@ -16,11 +16,11 @@ define(function(require, exports, module) {
         },
 
         initialize: function(options) {
-            this.model = options.model;
+            this.model = options.model
             this.session = options.session;
         }
 
     });
 
-    exports.RecipeView = RecipeView;
+    exports.RecipeCuratedView = RecipeCuratedView;
 })

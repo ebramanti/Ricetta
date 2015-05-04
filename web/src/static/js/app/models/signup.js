@@ -19,8 +19,10 @@ define(function(require, exports, module) {
         authenticate: function() {
             this.save({}, {
                 success: function(model, response) {
-                    window.location.replace('/#Home');
-                    window.location.reload()
+                    return true;
+                },
+                error: function(model, response) {
+                    console.log(response.responseText)
                 }
             })
         },

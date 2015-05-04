@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jadengore/Ricetta/api/service"
 	"github.com/jadengore/Ricetta/api/types"
@@ -209,7 +210,9 @@ func (a Api) NewRecipe(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func (a Api) GetRecipes(w rest.ResponseWriter, r *rest.Request) {
-	if !a.Authenticate(r) {
+	curator := r.URL.Query()["curator"] // used for curator results
+	if !a.Authenticate(r) || curator != nil {
+		fmt.Println("We here")
 		if recipesView, ok := a.Svc.GetCuratedRecipes(); !ok {
 			a.Util.SimpleJsonReason(w, 500, "Unexpected failure to get your recipes")
 			return

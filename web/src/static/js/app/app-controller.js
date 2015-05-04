@@ -8,6 +8,7 @@ define(function(require, exports, module) {
 
     var LandingLayout = require('app/layouts/landing-layout').LandingLayout;
     var HomeLayout = require('app/layouts/home-layout').HomeLayout;
+    var CuratorLayout = require('app/layouts/curator-layout').CuratorLayout;
 
     var SignupView = require('app/views/signup-view').SignupView;
     var FooterView = require('app/views/footer-view').FooterView;
@@ -29,7 +30,7 @@ define(function(require, exports, module) {
                 })
                 this.app.session = app.session;
                 // user is authed, redirect home
-                this.showHomeLayout();
+                // this.showHomeLayout();
             };
         },
         // Needed for AppRouter to initialize index route.
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
             }
         },
 
-        showHomeLayout:function() {
+        showHomeLayout: function() {
             if (!this.app.session.hasAuth()) {
                 this.index();
             } else {
@@ -52,6 +53,19 @@ define(function(require, exports, module) {
                     session: this.app.session
                 }));
                 this.app.mainRegion.show(new HomeLayout({
+                    session: this.app.session
+                }));
+            }
+        },
+
+        showCurator: function() {
+            if (!this.app.session.hasAuth()) {
+                this.index();
+            } else {
+                this.app.headerRegion.show(new NavbarView({
+                    session: this.app.session
+                }));
+                this.app.mainRegion.show(new CuratorLayout({
                     session: this.app.session
                 }));
             }
