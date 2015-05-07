@@ -11,5 +11,6 @@ RETURN r.id AS id
      , r.preptimeunit as preptimeunit
      , r.steps as steps
      , r.private as private
+     , r.image as image
      , r.created as created
      , r.last_modified as last_modified

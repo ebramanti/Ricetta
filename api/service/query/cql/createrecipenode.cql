@@ -10,5 +10,6 @@ CREATE (r:Recipe {
   , cooktimeunit: {cooktimeunit}
   , preptime: {preptime}
   , preptimeunit: {preptimeunit}
+  , image: {image}
 })
 CREATE (r)-[rel:CREATOR]->(u)

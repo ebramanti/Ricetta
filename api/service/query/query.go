@@ -334,6 +334,7 @@ func (q Query) CreateRecipe(handle string, recipe types.Recipe) (res types.Recip
 			"cooktimeunit": recipe.CookTimeUnit,
 			"preptime":     recipe.PrepTime,
 			"preptimeunit": recipe.PrepTimeUnit,
+			"image":        recipe.Image,
 		},
 		Result: &createdRecipe,
 	})

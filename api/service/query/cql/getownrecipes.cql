@@ -9,6 +9,7 @@ RETURN r.id AS id
      , r.preptime as preptime
      , r.preptimeunit as preptimeunit
      , r.steps as steps
+     , r.image as image
      , r.private as private
      , r.created as created
      , r.last_modified as last_modified

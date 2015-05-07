@@ -7,3 +7,4 @@ RETURN r.id AS id
      , r.cooktimeunit AS cooktimeunit
      , r.preptime AS preptime
      , r.preptimeunit AS preptimeunit
+     , r.image AS image

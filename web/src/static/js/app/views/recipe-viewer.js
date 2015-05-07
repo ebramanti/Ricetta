@@ -9,7 +9,7 @@ define(function(require, exports, module) {
         template: template,
 
         ui: {
-
+            image: '#recipe-image'
         },
 
         events: {
@@ -18,6 +18,9 @@ define(function(require, exports, module) {
         initialize: function(options) {
             this.model = options.model
             this.session = options.session;
+            if (!this.model.has('image')) {
+                this.ui.image.hide();
+            }
         }
 
     });
