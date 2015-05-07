@@ -12,10 +12,16 @@ define(function(require, exports, module) {
         template: template,
 
         regions: {
-            curator: '#curator'
+            curator: '#curator',
+            viewer: '#curatorViewer'
         },
 
         ui: {
+            curatorViewer: '#curatorViewer'
+        },
+
+        events: {
+            'click .recipe': 'viewRecipe'
         },
 
         initialize: function(options) {
@@ -26,6 +32,7 @@ define(function(require, exports, module) {
         },
 
         onRender: function() {
+            this.ui.curatorViewer.hide();
             this.showCuratedList();
         },
 
@@ -35,6 +42,22 @@ define(function(require, exports, module) {
             });
             this.curator.show(curatedRecipes);
         },
+
+        viewRecipe: function(event) {
+            if (this.curatorViewerHidden()) {
+                this.ui.curatorViewer.show();
+            }
+            var id = $(event.currentTarget).attr('id');
+            var currentRecipe = this.curated.get(id);
+            var currentRecipeView = new RecipeViewer({
+                model: currentRecipe
+            });
+            this.viewer.show(currentRecipeView);
+        },
+        curatorViewerHidden: function() {
+            return this.ui.curatorViewer.is(':hidden');
+        }
+
     });
     exports.CuratorLayout = CuratorLayout;
 });

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var LoginView = require('app/views/login-view').LoginView;
 
     var Recipes = require('app/collections/recipes').Recipes;
+    var RecipeViewer = require('app/views/recipe-viewer').RecipeViewer;
 
     var CuratorView = require('app/views/curator-view').CuratorView;
     var Login = require('app/models/login').Login;
@@ -19,7 +20,8 @@ define(function(require, exports, module) {
         ui: {
             jumbotron: '.jumbotron',
             existingUser: '#goToLogin',
-            newUser: '#goToSignup'
+            newUser: '#goToSignup',
+            viewArea: '#signupLoginArea'
         },
 
         events: {
@@ -39,9 +41,13 @@ define(function(require, exports, module) {
                 collection: this.recipes
             });
             this.curator.show(curatorView);
+            this.ui.viewArea.hide();
         },
 
         showLoginForm: function(options) {
+            if (this.viewAreaHidden()) {
+                this.ui.viewArea.show();
+            }
             var loginView = new LoginView({
                 session: this.session
             });
@@ -51,6 +57,9 @@ define(function(require, exports, module) {
         },
 
         showSignupForm: function(options) {
+            if (this.viewAreaHidden()) {
+                this.ui.viewArea.show();
+            }
             var signupView = new SignupView({
                 session: this.session
             });
@@ -59,12 +68,20 @@ define(function(require, exports, module) {
         },
 
         viewRecipe: function(event) {
+            if (this.viewAreaHidden()) {
+                this.ui.viewArea.show();
+            }
             var id = $(event.currentTarget).attr('id');
             var currentRecipe = this.recipes.get(id);
             var currentRecipeView = new RecipeViewer({
                 model: currentRecipe
             });
-            this.viewer.show(currentRecipeView);
+            this.ui.jumbotron.hide();
+            this.signupLoginArea.show(currentRecipeView);
+        },
+
+        viewAreaHidden: function() {
+            return this.ui.viewArea.is(':hidden')
         }
 
     });
