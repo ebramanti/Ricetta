@@ -23,7 +23,7 @@ define(function(require, exports, module) {
         },
 
         initialize: function(options) {
-
+            this.session = options.session;
         },
 
         onFormConfirm: function(event) {
@@ -36,8 +36,15 @@ define(function(require, exports, module) {
             });
             req.authenticate();
             console.log("Success on signup");
-            window.location.replace('/');
-            window.location.reload();
+            debugger;
+            console.log("Logging in");
+            var login = new Login({
+                handle: this.ui.handle.val(),
+                password: this.ui.pass.val(),
+                session: this.session
+            })
+            login.authenticate();
+            login.clear();
         }
 
     });
