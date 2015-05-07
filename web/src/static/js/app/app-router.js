@@ -8,7 +8,6 @@ define(function(require, exports, module){
             '': 'index',
             'Home': 'showHomeLayout',
             'Curator': 'showCurator'
-            // 'Profile': 'showProfile'
         },
 
     });

@@ -24,13 +24,10 @@ define(function(require, exports, module) {
             });
             // Logic for auth check.
             if (this.app.session.has('token')) {
-                console.log("User logged in");
                 $.ajaxSetup({
                     headers: {'Authorization' : this.app.session.get('token')}
                 })
                 this.app.session = app.session;
-                // user is authed, redirect home
-                // this.showHomeLayout();
             };
         },
         // Needed for AppRouter to initialize index route.

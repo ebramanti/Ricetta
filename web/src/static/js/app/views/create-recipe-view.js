@@ -119,6 +119,7 @@ define(function(require, exports, module) {
 
             var recipe = new Recipe({
                 title: this.ui.title.val(),
+                image: this.ui.image.val(),
                 notes: this.ui.notes.val(),
                 ingredients: this.getIngredients(),
                 cooktime: parseInt(cooktime, 10),
