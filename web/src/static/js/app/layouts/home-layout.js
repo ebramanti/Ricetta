@@ -23,12 +23,17 @@ define(function(require, exports, module) {
         events: {
             'click .recipe': 'viewRecipe',
             'click .create-recipe': 'createRecipe',
-            'click #cancel': 'resetViewer'
+            'click #cancel': 'resetViewer',
+            'click #create': 'showNewRecipe'
         },
 
         initialize: function(options) {
             this.session = options.session;
             this.recipes = new Recipes();
+            this.recipes.comparator = function(recipe) {
+                var date = new Date(recipe.get('last_modified')).getTime();
+                return -date;
+            }
             this.curator = new Recipes({
                 curator: true
             });
@@ -44,6 +49,7 @@ define(function(require, exports, module) {
             });
             this.list.show(personalRecipes);
             this.viewer.show(new RecipeViewerDefault());
+            this.listenTo(this.recipes, 'sync', this.showNewRecipe);
         },
         viewRecipe: function(event) {
             var id = $(event.currentTarget).attr('id');
@@ -61,6 +67,13 @@ define(function(require, exports, module) {
         },
         resetViewer: function() {
             this.viewer.show(new RecipeViewerDefault());
+        },
+
+        showNewRecipe: function() {
+            console.log("Event listeners FTW");
+            this.viewer.show(new RecipeViewer({
+                model: this.recipes.at(0)
+            }));
         }
     });
     exports.HomeLayout = HomeLayout;
