@@ -1,4 +1,5 @@
-var assert = require('assert')
+var Code = require('code')
+var expect = Code.expect
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
 
@@ -13,7 +14,10 @@ lab.experiment('The /recipe endpoint', function (done) {
       url: '/recipes'
     }
     app.inject(options, function (res) {
-      assert.equal(res.statusCode, 400)
+      expect(res.statusCode).to.equal(400)
+      expect(res.payload).to.include('error')
+      expect(res.payload).to.include('message')
+      expect(res.payload).to.include('validation')
       done()
     })
   })
@@ -25,7 +29,7 @@ lab.experiment('The /recipe endpoint', function (done) {
       url: '/reciPIES'
     }
     app.inject(options, function (res) {
-      assert.equal(res.statusCode, 404)
+      expect(res.statusCode).to.equal(404)
       done()
     })
   })
@@ -41,15 +45,18 @@ lab.experiment('The /recipe endpoint', function (done) {
         "notes": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
-        "tags": [
-          "trill",
-          "maple"
-        ],
+        "tags": [ "trill", "maple" ],
         "isPrivate": false
       }
     }
     app.inject(options, function (res) {
-      assert.equal(res.statusCode, 201)
+      var body = JSON.parse(res.payload)
+
+      expect(res.statusCode).to.not.equal(500)
+      expect(res.statusCode).to.equal(201)
+      expect(body).to.not.include('error')
+      expect(body).to.be.an.object()
+
       done()
     })
   })

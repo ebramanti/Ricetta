@@ -1,0 +1,8 @@
+// Config used during `npm test`
+
+{
+  "neo4j": {
+    "username": "neo4j",
+    "password": "neo4j"
+  }
+}

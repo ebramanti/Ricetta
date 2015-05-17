@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/jadengore/Ricetta#readme",
   "dependencies": {
+    "code": "^1.4.0",
     "config": "^1.13.0",
     "hapi": "^8.4.0",
     "joi": "^6.4.1",
