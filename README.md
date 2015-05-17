@@ -34,7 +34,7 @@ Ricetta
 5. Run the tests. Refrain from obsessing over test coverage.
 
     ```
-        $ npm run test
+        $ npm test
         $ npm run coverage
     ```
 

@@ -1,20 +1,32 @@
-var handler = {}
 var db = require('../connector')
 var uuid = require('uuid').v4
 
-handler.NewRecipe = function (req, reply) {
-  var recipe = req.payload
-  recipe.uuid = uuid()
-  db.save(recipe, function (err, node) {
-    if (err) { return reply(err, null); }
+var LABEL = 'Recipe'
 
-    db.label(node, ['Recipe'], function (err) {
+module.exports = function (resource) {
+
+  resource.NewRecipe = function (req, reply) {
+    var recipe = req.payload
+    recipe.uuid = uuid()
+    db.save(recipe, function (err, node) {
       if (err) { return reply(err, null); }
-      
-      return reply(recipe)
-        .code(201)
+
+      db.label(node, [ LABEL ], function (err) {
+        if (err) { return reply(err, null); }
+
+        return reply(recipe)
+          .code(201)
+      })
     })
-  })
+  }
+
+  resource.GetRecipes = function (req, reply) {
+    db.nodesWithLabel(LABEL, function (err, results) {
+      console.log(results.length)
+      return reply(results)
+        .code(200)
+    })
+  }
+
 }
 
-module.exports = handler

@@ -1,6 +1,7 @@
 var recipe = {}
 
 recipe.Schema = require('./schema')
-recipe.NewRecipe = require('./handler').NewRecipe
+
+require('./handler')(recipe)
 
 module.exports = recipe
