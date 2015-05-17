@@ -5,6 +5,12 @@ var lab = exports.lab = Lab.script()
 
 var app = require('../app')
 
+var wipe = require('./util').wipe
+
+lab.beforeEach(function (done) {
+  wipe(done)
+})
+
 lab.experiment('The /recipe endpoint', function (done) {
   lab.experiment('When posted to', function (done) {
 
@@ -77,6 +83,7 @@ lab.experiment('The /recipe endpoint', function (done) {
 
         expect(res.statusCode).to.equal(200)
         expect(body).to.be.an.array()
+        expect(body.length).to.equal(0)
 
         done()
       })

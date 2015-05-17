@@ -10,3 +10,7 @@ var db = require("seraph")({
 });
 
 module.exports = db
+
+module.exports.build = function (arr) {
+    return arr.join('\n')
+}

@@ -22,7 +22,6 @@ module.exports = function (resource) {
 
   resource.GetRecipes = function (req, reply) {
     db.nodesWithLabel(LABEL, function (err, results) {
-      console.log(results.length)
       return reply(results)
         .code(200)
     })
