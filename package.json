@@ -1,0 +1,29 @@
+{
+  "name": "ricetta",
+  "version": "0.1.0",
+  "description": "Ricetta, the ultimate recipe experience.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jadengore/Ricetta.git"
+  },
+  "keywords": [
+    "ricetta"
+  ],
+  "author": "EB, ZK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jadengore/Ricetta/issues"
+  },
+  "homepage": "https://github.com/jadengore/Ricetta#readme",
+  "dependencies": {
+    "config": "^1.13.0",
+    "hapi": "^8.4.0",
+    "joi": "^6.4.1",
+    "seraph": "^0.11.2",
+    "uuid": "^2.0.1"
+  }
+}
