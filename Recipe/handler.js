@@ -6,14 +6,13 @@ handler.NewRecipe = function (req, reply) {
   var recipe = req.payload
   recipe.uuid = uuid()
   db.save(recipe, function (err, node) {
+    if (err) { return reply(err, null); }
+
     db.label(node, ['Recipe'], function (err) {
-      if (err) {
-        reply('Failed to create recipe', null)
-          .code(500)
-      } else {
-        reply(recipe)
-          .code(201)
-      }
+      if (err) { return reply(err, null); }
+      
+      return reply(recipe)
+        .code(201)
     })
   })
 }

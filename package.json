@@ -4,7 +4,7 @@
   "description": "Ricetta, the ultimate recipe experience.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/lab/bin/lab -c"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "config": "^1.13.0",
     "hapi": "^8.4.0",
     "joi": "^6.4.1",
+    "lab": "^5.8.1",
     "seraph": "^0.11.2",
     "uuid": "^2.0.1"
   }
