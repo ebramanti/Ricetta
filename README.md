@@ -31,9 +31,10 @@ Ricetta
 		}
 	```
 
-5. Run the tests
+5. Run the tests. Refrain from obsessing over test coverage.
 
     ```
-        $ npm test
+        $ npm run test
+        $ npm run coverage
     ```
 

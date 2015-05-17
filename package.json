@@ -4,7 +4,8 @@
   "description": "Ricetta, the ultimate recipe experience.",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/lab/bin/lab -c"
+    "test": "./node_modules/lab/bin/lab -Cv",
+    "coverage": "./node_modules/lab/bin/lab -Cc"
   },
   "repository": {
     "type": "git",
