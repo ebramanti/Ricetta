@@ -23,6 +23,4 @@ module.exports = function (server) {
 		// config: {}
 	})
 
-	// Return server with linked routes
-	return server
 }

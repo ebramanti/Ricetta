@@ -2,6 +2,7 @@ var Code = require('code')
 var expect = Code.expect
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
+var async = require('async')
 
 var app = require('../app')
 
@@ -11,14 +12,23 @@ lab.beforeEach(function (done) {
   wipe(done)
 })
 
+var GET_RECIPES = {
+  method: 'GET',
+  url: '/recipes'
+}
+var POST_RECIPE = function(payload) {
+  return {
+    method: 'POST',
+    url: '/recipes',
+    payload: payload
+  }
+}
+
 lab.experiment('The /recipe endpoint', function (done) {
   lab.experiment('When posted to', function (done) {
 
     lab.test('no data to /recipe fails', function (done) {
-      var options = {
-        method: 'POST',
-        url: '/recipes'
-      }
+      var options = POST_RECIPE({})
 
       app.inject(options, function (res) {
         expect(res.statusCode).to.equal(400)
@@ -42,19 +52,15 @@ lab.experiment('The /recipe endpoint', function (done) {
     })
 
     lab.test('can create a recipe', function (done) {
-      var options = {
-        method: 'POST',
-        url: '/recipes',
-        payload: {
-          "title": "Old Fashioned Pancakes",
-          "author": "SoCash",
-          "notes": "Tastes almost as good as Grandma's recipe.",
-          "cookTime": 15,
-          "prepTime": 5,
-          "tags": [ "trill", "maple" ],
-          "isPrivate": false
-        }
-      }
+      var options = POST_RECIPE({
+        "title": "Old Fashioned Pancakes",
+        "author": "SoCash",
+        "notes": "Tastes almost as good as Grandma's recipe.",
+        "cookTime": 15,
+        "prepTime": 5,
+        "tags": [ "trill", "maple" ],
+        "isPrivate": false
+      })
 
       app.inject(options, function (res) {
         var body = JSON.parse(res.payload)
@@ -73,10 +79,7 @@ lab.experiment('The /recipe endpoint', function (done) {
   lab.experiment('GET route', function (done) {
 
     lab.test('returns a list of public recipes', function (done) {
-      var options = {
-        method: 'GET',
-        url: '/recipes'
-      }
+      var options = GET_RECIPES
 
       app.inject(options, function (res) {
         var body = JSON.parse(res.payload)
@@ -85,6 +88,38 @@ lab.experiment('The /recipe endpoint', function (done) {
         expect(body).to.be.an.array()
         expect(body.length).to.equal(0)
 
+        done()
+      })
+    })
+
+    lab.test('can return a couple recipes', function (done) {
+      var options = POST_RECIPE({
+        "title": "Old Fashioned Pancakes",
+        "author": "AysncMan",
+        "notes": "Tastes almost as good as Grandma's recipe.",
+        "cookTime": 15,
+        "prepTime": 5,
+        "tags": [ "trill", "maple" ],
+        "isPrivate": false
+      })
+
+      async.series([
+        function addRecipe (callback) {
+          app.inject(options, function (res) {
+            expect(res.statusCode).to.equal(201)
+            callback()
+          })
+        },
+        function checkRecipe (callback) {
+          app.inject(GET_RECIPES, function (res) {
+            var body = JSON.parse(res.payload)
+
+            expect(res.statusCode).to.equal(200)
+            expect(body.length).to.equal(1)
+            callback()
+          })
+        }
+      ], function (error, results) {
         done()
       })
     })
