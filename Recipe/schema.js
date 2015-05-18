@@ -7,7 +7,7 @@ var Schema = module.exports = Joi.object().keys({
   author: Joi.string().regex(/[a-zA-Z0-9]{4,30}/).required(),
   image: Joi.string().uri(),
   title: Joi.string().min(4).max(256).required(),
-  notes: Joi.string().min(0).max(2048),
+  description: Joi.string().min(0).max(2048),
   // No ingredients for now
   // ingredients: ...,
   cookTime: Joi.number().min(0).max(ONE_DAY_IN_MINUTES),

@@ -55,7 +55,7 @@ lab.experiment('The /recipe endpoint', function (done) {
       var options = POST_RECIPE({
         "title": "Old Fashioned Pancakes",
         "author": "SoCash",
-        "notes": "Tastes almost as good as Grandma's recipe.",
+        "description": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
         "tags": [ "trill", "maple" ],
@@ -96,7 +96,7 @@ lab.experiment('The /recipe endpoint', function (done) {
       var options = POST_RECIPE({
         "title": "Old Fashioned Pancakes",
         "author": "AysncMan",
-        "notes": "Tastes almost as good as Grandma's recipe.",
+        "description": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
         "tags": [ "trill", "maple" ],

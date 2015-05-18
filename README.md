@@ -37,9 +37,10 @@ Ricetta
 		$ git update-index --assume-unchanged config/*.json
     ```
 
-6. Run the tests. Refrain from obsessing over test coverage.
+6. Install dependencies and run the tests. Refrain from obsessing over test coverage.
 
     ```
+        $ npm install
         $ npm test
         $ npm run coverage
     ```
