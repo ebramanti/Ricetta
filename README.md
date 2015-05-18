@@ -31,7 +31,13 @@ Ricetta
 		}
 	```
 
-5. Run the tests. Refrain from obsessing over test coverage.
+5. Prevent Git from catching on to you config file changes
+
+    ```
+		$ git update-index --assume-unchanged config/*.json
+    ```
+
+6. Run the tests. Refrain from obsessing over test coverage.
 
     ```
         $ npm test
