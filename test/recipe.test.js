@@ -95,7 +95,7 @@ lab.experiment('The /recipe endpoint', function (done) {
     lab.test('can return a couple recipes', function (done) {
       var options = POST_RECIPE({
         "title": "Old Fashioned Pancakes",
-        "author": "AysncMan",
+        "author": "AsyncMan",
         "description": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
