@@ -8,7 +8,7 @@ var app = require('../app')
 
 var wipe = require('./util').wipe
 
-lab.beforeEach(function (done) {
+lab.afterEach(function (done) {
   wipe(done)
 })
 
