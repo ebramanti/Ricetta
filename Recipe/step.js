@@ -2,6 +2,8 @@ var Joi = require('joi')
 var async = require('async')
 var db = require('../connector')
 
+var LABEL = 'Step'
+
 var Step = module.exports = {
   CreateSteps: function(recipe, steps, next) {
     var stepQueries = []
@@ -10,6 +12,12 @@ var Step = module.exports = {
       async.waterfall([
         function createStepNode (callback) {
           db.save(steps[0], function (err, node) {
+            if (err) { return callback(err, null); }
+            callback(null, node)
+          })
+        },
+        function labelStepNode (node, callback) {
+          db.label(node, [ LABEL ], function (err) {
             if (err) { return callback(err, null); }
             callback(null, node)
           })
@@ -26,31 +34,39 @@ var Step = module.exports = {
     })
     // More steps
     for (var i = 1; i < steps.length; i++) {
-      stepQueries.push(function (previousNode, cb) {
-        async.waterfall([
-          function createStepNode (callback) {
-            db.save(steps[i], function (err, node) {
-              if (err) { return callback(err, null); }
-              callback(null, node)
-            })
-          },
-          function linkStepNode (node, callback) {
-            db.relate(previousNode, 'NEXT', node, {}, function (err, relationship) {
-              if (err) { return callback(err, null); }
-              callback(null, node)
-            })
-          }
-        ], function (error, node) {
-          cb(error, node)
+      (function (i) {
+        stepQueries.push(function (previousNode, cb) {
+          async.waterfall([
+            function createStepNode (callback) {
+              db.save(steps[i], function (err, node) {
+                if (err) { return callback(err, null); }
+                callback(null, node)
+              })
+            },
+            function labelStepNode (node, callback) {
+              db.label(node, [ LABEL ], function (err) {
+                if (err) { return callback(err, null); }
+                callback(null, node)
+              })
+            },
+            function linkStepNode (node, callback) {
+              db.relate(previousNode, 'NEXT', node, {}, function (err, relationship) {
+                if (err) { return callback(err, null); }
+                callback(null, node)
+              })
+            }
+          ], function (error, node) {
+            cb(error, node)
+          })
         })
-      })
+      })(i)
     }
 
     async.waterfall(stepQueries, function (error, results) {
       if (error) {
-        return reply('Unable to create steps').code(500)
+        next(error)
       }
-      next()
+      next(error)
     })
   }
 }
