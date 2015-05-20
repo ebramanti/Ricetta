@@ -18,7 +18,7 @@ var Schema = module.exports = Joi.object().keys({
         instruction: Joi.string().min(3).max(2048).required(),
         time: Joi.number().min(1).max(ONE_DAY_IN_MINUTES)
     })
-  ).min(1),//.required(),
+  ).min(1).required(),
   tags: Joi.array().items(Joi.string()).min(1),
   isPrivate: Joi.boolean().required()
 })

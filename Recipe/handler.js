@@ -27,21 +27,15 @@ module.exports = function (resource) {
         })
       }
     ], function (error, node) {
-        if (steps) {
-          console.log('Steps detected')
-          step.CreateSteps(node, steps, function(error) {
-            if (error) {
-              return reply('Unable to create steps')
-                .code(500)
-            }
-            recipe.steps = steps
-            return reply(recipe)
-              .code(201)
-          })
-        } else {
+        step.CreateSteps(node, steps, function(error) {
+          if (error) {
+            return reply('Unable to create steps')
+              .code(500)
+          }
+          recipe.steps = steps
           return reply(recipe)
-          .code(201)
-        }
+            .code(201)
+        })
     })
   }
 
