@@ -58,6 +58,15 @@ lab.experiment('The /recipe endpoint', function (done) {
         "description": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
+        "steps": [
+          {
+            "instruction": "In a large bowl, sift together the flour, baking powder, salt and sugar. Make a well in the center and pour in the milk, egg and melted butter; mix until smooth.",
+            "time": 10
+          },
+          {
+            "instruction": "Heat a lightly oiled griddle or frying pan over medium high heat. Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake. Brown on both sides and serve hot."
+          }
+        ],
         "tags": [ "trill", "maple" ],
         "isPrivate": false
       })
@@ -69,6 +78,7 @@ lab.experiment('The /recipe endpoint', function (done) {
         expect(res.statusCode).to.equal(201)
         expect(body).to.not.include('error')
         expect(body).to.be.an.object()
+        expect(body.steps.length).to.equal(2)
 
         done()
       })
@@ -99,6 +109,16 @@ lab.experiment('The /recipe endpoint', function (done) {
         "description": "Tastes almost as good as Grandma's recipe.",
         "cookTime": 15,
         "prepTime": 5,
+        "steps": [
+          {
+            "instruction": "In a large bowl, sift together the flour, baking powder, salt and sugar. Make a well in the center and pour in the milk, egg and melted butter; mix until smooth.",
+            "time": 10
+          },
+          {
+            "instruction": "Heat a lightly oiled griddle or frying pan over medium high heat. Pour or scoop the batter onto the griddle, using approximately 1/4 cup for each pancake. Brown on both sides and serve hot.",
+            "time": 10
+          }
+        ],
         "tags": [ "trill", "maple" ],
         "isPrivate": false
       })
