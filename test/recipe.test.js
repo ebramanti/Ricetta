@@ -2,15 +2,10 @@ var Code = require('code')
 var expect = Code.expect
 var Lab = require('lab')
 var lab = exports.lab = Lab.script()
+require('./util').setUpLab(lab)
 var async = require('async')
 
 var app = require('../app')
-
-var wipe = require('./util').wipe
-
-lab.afterEach(function (done) {
-  wipe(done)
-})
 
 var GET_RECIPES = {
   method: 'GET',
