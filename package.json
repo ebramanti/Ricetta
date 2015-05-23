@@ -1,0 +1,33 @@
+{
+  "name": "ricetta",
+  "version": "0.1.0",
+  "description": "Ricetta, the ultimate recipe experience.",
+  "main": "app.js",
+  "scripts": {
+    "test": "./node_modules/lab/bin/lab -Cv",
+    "coverage": "./node_modules/lab/bin/lab -Cc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jadengore/Ricetta.git"
+  },
+  "keywords": [
+    "ricetta"
+  ],
+  "author": "EB, ZK",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jadengore/Ricetta/issues"
+  },
+  "homepage": "https://github.com/jadengore/Ricetta#readme",
+  "dependencies": {
+    "async": "^0.9.0",
+    "code": "^1.4.0",
+    "config": "^1.13.0",
+    "hapi": "^8.4.0",
+    "joi": "^6.4.1",
+    "lab": "^5.8.1",
+    "seraph": "^0.11.2",
+    "uuid": "^2.0.1"
+  }
+}
